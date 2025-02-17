@@ -149,10 +149,12 @@ authentication source:
 <span class="x">        'ldap:Ldap',</span>
 
 <span class="x">        /**</span>
-<span class="x">         * The connection string for the LDAP-server.</span>
+<span class="x">         * The connection string for the LDAP server.</span>
 <span class="x">         * You can add multiple by separating them with a space.</span>
+<span class="x">         * Cannot contain simple hostnames or IP-addresses,</span>
+<span class="x">         * but must be given one or more ldap(s):// URIs.</span>
 <span class="x">         */</span>
-<span class="x">        'connection_string' =&gt; 'ldap.example.org',</span>
+<span class="x">        'connection_string' =&gt; 'ldaps://ldap.example.org',</span>
 
 <span class="x">        /**</span>
 <span class="x">         * Whether SSL/TLS should be used when contacting the LDAP server.</span>
@@ -303,7 +305,7 @@ authentication source:
  ) to have a name which makes sense to your organization.
 You also need to update the
  <code>
-  hostname
+  connection_string
  </code>
  and
  <code>
@@ -311,9 +313,9 @@ You also need to update the
  </code>
  options. The
  <code>
-  hostname
+  connection_string
  </code>
- should be the hostname of your LDAP server, and the
+ should be the connection string for your LDAP server, and the
  <code>
   dnpattern
  </code>
@@ -431,8 +433,12 @@ is the password for that
  Configuring failover
 </h2>
 <p>
- You can configure multiple LDAP servers in the hostname option by separating
-the individual hosts with a space. This enables the builtin LDAP failover
+ You can configure multiple LDAP servers in the
+ <code>
+  connection_string
+ </code>
+ option by separating
+the individual connections with a space. This enables the builtin LDAP failover
 in OpenLDAP.
 </p>
 <p>
@@ -454,10 +460,10 @@ TIMEOUT         20
  Example:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">    /* Configuration that uses two ldap servers. */</span>
+ <pre><span></span><code><span class="x">    /* Configuration that uses two LDAP servers. */</span>
 <span class="x">    'example-ldap' =&gt; [</span>
 <span class="x">        'ldap:Ldap',</span>
-<span class="x">        /* The hostname of the LDAP server. */</span>
+<span class="x">        /* The connection string for the LDAP servers. */</span>
 <span class="x">        'connect_string' =&gt; 'ldaps://ldap1.example.org ldaps://ldap2.example.org',</span>
 <span class="x">        'dnpattern' =&gt; 'uid=%username%,ou=people,dc=example,dc=org',</span>
 <span class="x">    ],</span>
@@ -669,7 +675,7 @@ required, see the config options for ldap:AttributeAddFromLDAP above.
 <div class="highlight">
  <pre><span></span><code><span class="x">    50 =&gt; [</span>
 <span class="x">        'class' =&gt; 'ldap:AttributeAddFromLDAP',</span>
-<span class="x">        'connection_string' =&gt; 'ldap.example.org',</span>
+<span class="x">        'connection_string' =&gt; 'ldaps://ldap.example.org',</span>
 <span class="x">        'search.username' =&gt; 'CN=LDAP User,CN=Users,DC=example,DC=org',</span>
 <span class="x">        'search.password' =&gt; 'Abc123',</span>
 <span class="x">        'search.base' =&gt; ['DC=example,DC=org'],</span>
@@ -698,11 +704,11 @@ a listing of all configuration options and their details.
 
 
 <span class="x">        /**</span>
-<span class="x">         * LDAP connection settings can be retrieved from an ldap:LDAP</span>
+<span class="x">         * LDAP connection settings can be retrieved from an ldap:Ldap</span>
 <span class="x">         * authsource. Specify the authsource name here to pull that</span>
 <span class="x">         * data from the authsources.php file in the config folder.</span>
 <span class="x">         *</span>
-<span class="x">         * Note: ldap:LDAPMulti is not supported as the SimpleSAMLphp</span>
+<span class="x">         * Note: ldap:LdapMulti is not supported as the SimpleSAMLphp</span>
 <span class="x">         *       framework does not pass any information about which</span>
 <span class="x">         *       LDAP source the user selected.</span>
 <span class="x">         *</span>
@@ -759,18 +765,20 @@ a listing of all configuration options and their details.
 
 
 <span class="x">        /**</span>
-<span class="x">         * This is the hostname string of LDAP server(s) to try</span>
+<span class="x">         * This is the connection string of LDAP server(s) to try</span>
 <span class="x">         * and connect to. It should be the same format as the</span>
-<span class="x">         * LDAP authsource hostname as it is passed to that class.</span>
+<span class="x">         * LDAP authsource connection_string as it is passed to that class.</span>
 <span class="x">         *</span>
 <span class="x">         * Note: Multiple servers are separated by a space.</span>
+<span class="x">         * Cannot contain simple hostnames or IP-addresses,</span>
+<span class="x">         * but must be given one or more ldap(s):// URIs.</span>
 <span class="x">         *</span>
 <span class="x">         * Default: NULL</span>
 <span class="x">         * Required: Yes, unless authsource is used</span>
-<span class="x">         * AuthSource: hostname</span>
+<span class="x">         * AuthSource: connection_string</span>
 <span class="x">         */</span>
-<span class="x">        'connection_string' =&gt; 'ldap.example.org',</span>
-<span class="x">        'connection_string' =&gt; 'ad1.example.org ad2.example.org',</span>
+<span class="x">        'connection_string' =&gt; 'ldaps://ldap.example.org',</span>
+<span class="x">        'connection_string' =&gt; 'ldaps://ad1.example.org ldaps://ad2.example.org',</span>
 
 
 <span class="x">        /**</span>
