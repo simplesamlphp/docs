@@ -99,6 +99,21 @@
    </a>
    <ul>
     <li>
+     <a href="#version-240">
+      Version 2.4.0
+     </a>
+    </li>
+    <li>
+     <a href="#version-230">
+      Version 2.3.0
+     </a>
+    </li>
+    <li>
+     <a href="#version-223">
+      Version 2.2.3
+     </a>
+    </li>
+    <li>
      <a href="#version-222">
       Version 2.2.2
      </a>
@@ -195,11 +210,311 @@ See the
  </a>
  for specific information about upgrading.
 </p>
+<h2 id="version-240">
+ Version 2.4.0
+</h2>
+<p>
+ Released TBD
+</p>
+<ul>
+ <li>
+  Fixed PHP 8.4 deprecation notices
+ </li>
+ <li>
+  Fixed infinite recursion (#2367)
+ </li>
+ <li>
+  Added a new feature flag
+  <code>
+   encryption.optional
+  </code>
+  to allow unencrypted assertions if the SP does
+  not provide an encryption certificate (#2208)
+ </li>
+ <li>
+  Make translations tool theme-aware (#2315)
+ </li>
+ <li>
+  Fixed build-workflow to only re-build the website once
+ </li>
+ <li>
+  Bugfix: Use entityID from state to allow overriding the issuer (#2345)
+ </li>
+ <li>
+  When only a single IdP is in scope, skip discovery screen (#2355)
+ </li>
+ <li>
+  Fixed "Undefined array key" warning in RequestedAuthnContextSelector if no RAC is present in the request
+ </li>
+</ul>
+<p>
+ <code>
+  adfs
+ </code>
+</p>
+<ul>
+ <li>
+  PHP 8.4 support
+ </li>
+ <li>
+  The ADFS-module has been disconnected from the SSP release. To continue to use it, the module has to be manually installed.
+ </li>
+ <li>
+  The ADFS-module was completely rewritten and now uses our own XML-libraries for building, signing and encrypting XML (v3.0.0)
+ </li>
+</ul>
+<p>
+ <code>
+  authcrypt
+ </code>
+</p>
+<ul>
+ <li>
+  PHP 8.4 support
+ </li>
+</ul>
+<p>
+ <code>
+  discopower
+ </code>
+</p>
+<ul>
+ <li>
+  Hide tab list when there's only one tab (simplesamlphp/simplesamlphp-module-discopower#27) (v1.5.0)
+ </li>
+ <li>
+  Bugfix: Use jquery-assets repo to work around symlink-issue (simplesamlphp/simplesamlphp-module-discopower#28) (v1.5.1)
+ </li>
+</ul>
+<p>
+ <code>
+  ldap
+ </code>
+</p>
+<ul>
+ <li>
+  Add SASL-support (v2.4.0). Note that this required a newer version of symfony/ldap than the one packaged (v2.4.3)
+ </li>
+</ul>
+<p>
+ <code>
+  saml
+ </code>
+</p>
+<ul>
+ <li>
+  Stricter regexp to verify SubjectID/PairwiseID: disallow trailing spaces.
+ </li>
+ <li>
+  Feature: Add authproc-filter to be able to manipulate the Assertion's Issuer (#2346)
+ </li>
+</ul>
+<p>
+ <code>
+  debugsp
+ </code>
+</p>
+<ul>
+ <li>
+  Added module to allow testing the SP you have in your installation without needing admin login
+  This is similar to the admin/test page but can more easily be used by an IdP who may not have admin
+  privileges on your site.
+ </li>
+</ul>
+<h2 id="version-230">
+ Version 2.3.0
+</h2>
+<p>
+ Released 2024-08-20
+</p>
+<ul>
+ <li>
+  The SubjectID authproc-filter now has a new option
+  <code>
+   hashed
+  </code>
+  , which if set to true
+  will automatically hash the unique part of the ID. This will also automatically
+  make the unique part of the ID in compliance with the specs (#2006)
+ </li>
+ <li>
+  Add microsecond support to the FileLoggingHandler (#2084)
+ </li>
+ <li>
+  Session ID's are now hashed when stored in a database (#2106)
+ </li>
+ <li>
+  Improved HTML 5 compatibility (#2162)
+ </li>
+ <li>
+  Fix: preloaded resource not used (#2207)
+ </li>
+ <li>
+  BC-break (unintentional): plain-text admin-password are no longer allowed (#2113)
+ </li>
+</ul>
+<p>
+ <code>
+  authorize
+ </code>
+</p>
+<ul>
+ <li>
+  Feature: allow a user to reauthenticate with a different account (simplesamlphp/simplesamlphp-module-authorize#17) (v1.5.0)
+ </li>
+ <li>
+  Feature: show user what account he's using when authorization fails (simplesamlphp/simplesamlphp-module-authorize#20) (v1.6.0)
+ </li>
+ <li>
+  Fix: fix faulty translation (v1.6.1)
+ </li>
+</ul>
+<p>
+ <code>
+  consent
+ </code>
+</p>
+<ul>
+ <li>
+  Update Luxembourgish translations (v1.4.0)
+ </li>
+</ul>
+<p>
+ <code>
+  negotiate
+ </code>
+</p>
+<ul>
+ <li>
+  Add support for SPNEGO channel binding (v2.3.1)
+ </li>
+</ul>
+<p>
+ <code>
+  sqlauth
+ </code>
+</p>
+<ul>
+ <li>
+  Add username_regex option - run regular expression over username before querying the
+  database (simplesamlphp/simplesamlphp-module-sqlauth#11) (v1.3.0)
+ </li>
+</ul>
+<h2 id="version-223">
+ Version 2.2.3
+</h2>
+<p>
+ Released 2024-08-20
+</p>
+<ul>
+ <li>
+  Added a missing use-statement that would cause a 'class not found' exception.
+ </li>
+ <li>
+  Improved Luxembourgish (LB) translations (#2129, #2140)
+ </li>
+ <li>
+  Fix regression introduced in v2.2.2 regarding autofilling usernames.
+ </li>
+ <li>
+  Restore the possibility to set
+  <code>
+   trusted.url.domains
+  </code>
+  to null
+ </li>
+ <li>
+  Improved documentation on cachedir-setting (#2153)
+ </li>
+ <li>
+  Fix bug in post.twig (#2161)
+ </li>
+ <li>
+  Fix MDQ cache file bugs (#2200)
+ </li>
+</ul>
+<p>
+ <code>
+  adfs
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed metadata download to become a proper xml-file
+ </li>
+ <li>
+  Prevent metadata-download from ever being cached
+ </li>
+</ul>
+<p>
+ <code>
+  authorize
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed logout button (simplesamlphp/simplesamlphp-module-authorize#16) (v1.4.1)
+ </li>
+</ul>
+<p>
+ <code>
+  ldap
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed a bug that would throw an unhandled exception to the user if they would enter
+  a non-existing organization and
+  <code>
+   username_organization_method
+  </code>
+  is set to
+  <code>
+   allow
+  </code>
+  or
+  <code>
+   force
+  </code>
+  (v2.3.6).
+ </li>
+</ul>
+<p>
+ <code>
+  metarefresh
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed incorrect parsing of configuration (v1.2.2)
+ </li>
+</ul>
+<p>
+ <code>
+  radius
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed security bug known as Blast-Radius (CVE-2024-3596) (simplesamlphp/simplesamlphp-module-radius#10) (v2.0.2)
+ </li>
+</ul>
 <h2 id="version-222">
  Version 2.2.2
 </h2>
 <p>
- Released TBD
+ :warning: IMPORTANT NOTE :warning:
+</p>
+<p>
+ Due to a mistake, this bugfix-release can turn out to become a backwards-incompatibility for those who override the loginuserpass.twig in their custom theme.
+Please update your theme to reflect the changes in
+ <a href="https://github.com/simplesamlphp/simplesamlphp/pull/2022/commits/691199e9b963a2861d731e6583555c7a8df39992">
+  this commit
+ </a>
+ before updating.
+</p>
+<p>
+ Released 2024-04-30
 </p>
 <ul>
  <li>

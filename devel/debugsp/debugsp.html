@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="debugsp">
+ DebugSP
+</h1>
+<div class="toc">
+ <ul>
+  <li>
+   <a href="#debugsp">
+    DebugSP
+   </a>
+   <ul>
+    <li>
+     <a href="#introduction">
+      Introduction
+     </a>
+    </li>
+    <li>
+     <a href="#preparations">
+      Preparations
+     </a>
+    </li>
+    <li>
+     <a href="#using-debugsp">
+      Using debugsp
+     </a>
+    </li>
+   </ul>
+  </li>
+ </ul>
+</div>
+<h2 id="introduction">
+ Introduction
+</h2>
+<p>
+ The debugsp allows you to logon to any SP offered by your SimpleSAMLphp installation.
+This is similar to the functionality on the admin/test page but using debugsp does not
+require you to login as the admin user. This can be useful if an IdP you are talking to
+wishes to verify that a login session can be created using your SP and their IdP.
+</p>
+<h2 id="preparations">
+ Preparations
+</h2>
+<p>
+ You need to enable the module in
+ <code>
+  config.php
+ </code>
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="s1">'module.enable'</span><span class="w"> </span><span class="o">=</span>&gt;<span class="w"> </span><span class="o">[</span>
+<span class="w">     </span><span class="err">'</span><span class="nv">debugsp</span><span class="w"> </span><span class="o">=</span>&gt;<span class="w"> </span>true,
+<span class="w">     </span>…
+<span class="o">]</span>,
+</code></pre>
+</div>
+<h2 id="using-debugsp">
+ Using debugsp
+</h2>
+<p>
+ Visit the link debugsp/test at your site. All the SP you have configured will be listed.
+You can try to login as an SP. Once successful you will see a list of the attributes the
+IdP supplied. You can then logout again and test another SP if desired.
+</p>
+</main></body>
+</html>
