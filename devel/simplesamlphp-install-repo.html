@@ -136,22 +136,45 @@ cp<span class="w"> </span>metadata/saml20-sp-remote.php.dist<span class="w"> </s
 </code></pre>
 </div>
 <p>
- The default config.php has a setting
- <code>
-  cachedir
- </code>
- which defaults to
+ SimpleSAMLphp uses Symfony to maintain a cache which is by default stored
+at
  <code>
   /var/cache/simplesamlphp
  </code>
- . This directory should exist and be
-writable by the web server user. You may like to consider something
+ . You are encouraged to consider something
 like the ACL commands from the
  <a href="https://symfony.com/doc/current/setup/file_permissions.html#1-using-acl-on-a-system-that-supports-setfacl-linux-bsd">
   Symfony
 website
  </a>
  to enable access to this cache directory.
+</p>
+<p>
+ The cache directory is stored at the location indicated by the
+ <code>
+  cachedir
+ </code>
+ option in your config.php (defaulting to
+ <code>
+  /var/cache/simplesamlphp
+ </code>
+ ). This directory should exist and be
+writable by the web server user and the user you use to run composer.
+</p>
+<p>
+ Some commands which may be run from composer will want to clear this
+cache which leads to a situation that the cache directory will need
+permission to be updated by both the web server and also from your
+regular user account that you use to checkout the git repository and
+run composer.
+</p>
+<p>
+ This is why it is recommended to use the solution provided on the
+ <a href="https://symfony.com/doc/current/setup/file_permissions.html#1-using-acl-on-a-system-that-supports-setfacl-linux-bsd">
+  Symfony
+website
+ </a>
+ linked above to enable access to this cache directory.
 </p>
 <p>
  Install the external dependencies with Composer (you can refer to
