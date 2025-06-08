@@ -94,6 +94,11 @@
    </a>
    <ul>
     <li>
+     <a href="#version-243">
+      Version 2.4.3
+     </a>
+    </li>
+    <li>
      <a href="#version-242">
       Version 2.4.2
      </a>
@@ -232,11 +237,22 @@ See the
  </a>
  for specific information about upgrading.
 </p>
+<h2 id="version-243">
+ Version 2.4.3
+</h2>
+<p>
+ Released TBD
+</p>
+<ul>
+ <li>
+  Update and improve Indonesian translations (#2462)
+ </li>
+</ul>
 <h2 id="version-242">
  Version 2.4.2
 </h2>
 <p>
- Released TBD
+ Released 2025-06-04
 </p>
 <ul>
  <li>
@@ -245,6 +261,10 @@ See the
  <li>
   Fixed a backwards incompatibility that would throw an exception on an invalid entityID.
   The exception was downgraded to a warning in the log (#2448)
+ </li>
+ <li>
+  Fixed a security-issue where cron-jobs could be executed using the default key,
+  even if a different one was set (#2453)
  </li>
 </ul>
 <p>
