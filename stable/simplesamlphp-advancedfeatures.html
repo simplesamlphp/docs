@@ -248,7 +248,10 @@ Please see the
  Metadata signing
 </h2>
 <p>
- SimpleSAMLphp supports signing of the metadata it generates. Metadata signing is configured by four options:
+ SimpleSAMLphp supports signing of the metadata it generates.
+</p>
+<p>
+ Metadata signing is configured by four options:
 </p>
 <ul>
  <li>
@@ -326,7 +329,12 @@ Please see the
  <code>
   config/config.php
  </code>
- -file, or per SP/IdP by adding them to the hosted metadata for the SP/IdP. The configuration in the metadata for the SP/IdP takes precedence over the global configuration.
+ -file, or per SP/IdP by adding them to the hosted
+metadata for the SP/IdP. The configuration in the metadata for the
+SP/IdP takes precedence over the global configuration. Note that if
+wish to set the metadata.sign.privatekey and metadata.sign.certificate
+in a metadata file you need to also set metadata.sign.enable=true in
+that metadata file.
 </p>
 <p>
  There is also an additional fallback for the private key and the certificate. If
