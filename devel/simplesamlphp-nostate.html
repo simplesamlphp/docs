@@ -201,7 +201,11 @@ accessed. For example we may have the following scenario:
   <code>
    https://www.example.org/
   </code>
-  . A session is created for the user, and the session cookie is set for the current domain (www.example.org).
+  . A session is created for the user, and the session cookie is set for the current domain (
+  <code>
+   www.example.org
+  </code>
+  ).
  </li>
  <li>
   The user needs to be authenticated. We therefore save some information about the current status in the state array, create a SAML 2.0 authentication request, and send it to the IdP.
