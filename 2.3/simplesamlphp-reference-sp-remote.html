@@ -552,54 +552,48 @@
  <dd>
   The three most commonly used values are:
  </dd>
- <dt>
-  :
- </dt>
- <dt>
-  1.
+</dl>
+<ul>
+ <li>
   <code>
    urn:oasis:names:tc:SAML:2.0:nameid-format:transient
   </code>
- </dt>
- <dt>
-  2.
+ </li>
+ <li>
   <code>
    urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
   </code>
- </dt>
- <dt>
-  3.
+ </li>
+ <li>
   <code>
    urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
   </code>
- </dt>
+ </li>
+</ul>
+<dl>
  <dd>
-  <p>
-   The
-   <code>
-    transient
-   </code>
-   format will generate a new unique ID every time
+  The
+  <code>
+   transient
+  </code>
+  format will generate a new unique ID every time
   the SP logs in.
-  </p>
  </dd>
  <dd>
-  <p>
-   To properly support the
-   <code>
-    persistent
-   </code>
-   and
-   <code>
-    emailAddress
-   </code>
-   formats,
+  To properly support the
+  <code>
+   persistent
+  </code>
+  and
+  <code>
+   emailAddress
+  </code>
+  formats,
   you should configure
-   <a href="./saml/nameid.html">
-    NameID generation filters
-   </a>
-   on your IdP.
-  </p>
+  <a href="./saml/nameid.html">
+   NameID generation filters
+  </a>
+  on your IdP.
  </dd>
  <dt>
   <code>
