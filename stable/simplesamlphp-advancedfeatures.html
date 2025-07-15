@@ -336,29 +336,6 @@ wish to set the metadata.sign.privatekey and metadata.sign.certificate
 in a metadata file you need to also set metadata.sign.enable=true in
 that metadata file.
 </p>
-<p>
- There is also an additional fallback for the private key and the certificate. If
- <code>
-  metadata.sign.privatekey
- </code>
- and
- <code>
-  metadata.sign.certificate
- </code>
- isn't configured, SimpleSAMLphp will use the
- <code>
-  privatekey
- </code>
- ,
- <code>
-  privatekey_pass
- </code>
- and
- <code>
-  certificate
- </code>
- options in the metadata for the SP/IdP.
-</p>
 <h2 id="session-checking-function">
  Session checking function
 </h2>
