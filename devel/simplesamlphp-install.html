@@ -1250,14 +1250,14 @@ mv<span class="w"> </span>../simplesamlphp/public<span class="w"> </span>simples
  Change the two lines from:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">require_once(dirname(_FILE__, 2) . '/lib/_autoload.php');</span>
+ <pre><span></span><code><span class="x">require_once(dirname(_FILE__, 2) . '/src/_autoload.php');</span>
 </code></pre>
 </div>
 <p>
  to something like:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">require_once(dirname(__FILE__, 3) . '/lib/_autoload.php');</span>
+ <pre><span></span><code><span class="x">require_once(dirname(__FILE__, 3) . '/src/_autoload.php');</span>
 </code></pre>
 </div>
 <p>
