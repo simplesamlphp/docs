@@ -396,7 +396,7 @@ from doing anything.
 <span class="x">        }</span>
 
 <span class="x">        $ad = $session-&gt;getAuthData($authority, "Attributes");</span>
-<span class="x">        if ($ad === null) {</span>
+<span class="x">        if (empty($ad)) {</span>
 <span class="x">            return true;</span>
 <span class="x">        }</span>
 <span class="x">        $uid = $ad["uid"];</span>
