@@ -144,6 +144,21 @@
      </a>
     </li>
     <li>
+     <a href="#version-226">
+      Version 2.2.6
+     </a>
+    </li>
+    <li>
+     <a href="#version-225">
+      Version 2.2.5
+     </a>
+    </li>
+    <li>
+     <a href="#version-224">
+      Version 2.2.4
+     </a>
+    </li>
+    <li>
      <a href="#version-223">
       Version 2.2.3
      </a>
@@ -641,6 +656,102 @@ See the
  <li>
   Add username_regex option - run regular expression over username before querying the
   database (simplesamlphp/simplesamlphp-module-sqlauth#11) (v1.3.0)
+ </li>
+</ul>
+<h2 id="version-226">
+ Version 2.2.6
+</h2>
+<p>
+ Released 2025-08-20
+</p>
+<ul>
+ <li>
+  Fix auth state AuthnInstant (#2478)
+ </li>
+</ul>
+<p>
+ <code>
+  cron
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed a security-issue where cron-jobs could be executed using the default key,
+  even if a different one was set (#2453)
+ </li>
+</ul>
+<p>
+ <code>
+  metarefresh
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed parsing of large metadata files (v1.2.4)
+ </li>
+</ul>
+<h2 id="version-225">
+ Version 2.2.5
+</h2>
+<p>
+ Released 2025-03-11
+</p>
+<ul>
+ <li>
+  Fixed PHP 8.4 deprecation notices
+ </li>
+ <li>
+  Fixed infinite recursion (#2367)
+ </li>
+ <li>
+  Fixed "Undefined array key" warning in RequestedAuthnContextSelector if no RAC is present in the request
+ </li>
+ <li>
+  Bumped vulnerable saml2-library to v4.17.0
+ </li>
+</ul>
+<h2 id="version-224">
+ Version 2.2.4
+</h2>
+<p>
+ Released 2024-12-02
+</p>
+<p>
+ <code>
+  Security
+ </code>
+</p>
+<ul>
+ <li>
+  A security bug was patched in the
+  <code>
+   saml2-library
+  </code>
+  that allowed for XXE during the parsing
+  of SAML2-messages (CVE-2024-52596)
+ </li>
+</ul>
+<p>
+ <code>
+  Other fixes
+ </code>
+</p>
+<ul>
+ <li>
+  Run ob_end_clean() on configuration file parsing error (#2219)
+ </li>
+ <li>
+  Fix typo that caused the metadata file-upload to be hidden (#2271)
+ </li>
+</ul>
+<p>
+ <code>
+  admin
+ </code>
+</p>
+<ul>
+ <li>
+  Fix metadata-viewer to output a valid PHP array
  </li>
 </ul>
 <h2 id="version-223">
