@@ -357,5 +357,24 @@ ldap:AttributeAddUsersGroups filter with the group attribute.
 <span class="x">],</span>
 </code></pre>
 </div>
+<p>
+ You can restrict an attribute allowance to a list of Service Providers.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">'authproc.sp' =&gt; [</span>
+<span class="x">    60 =&gt; array[</span>
+<span class="x">        'class' =&gt; 'authorize:Authorize',</span>
+<span class="x">        'uid'   =&gt;  [</span>
+<span class="x">            '/.*@students.example.edu$/',</span>
+<span class="x">            '/^(stu1|stu2|stu3)@example.edu$/',</span>
+<span class="x">            'spEntityIDs' =&gt; [</span>
+<span class="x">                'https://example.com/sp1',</span>
+<span class="x">                'https://example.com/sp2'</span>
+<span class="x">            ]</span>
+<span class="x">        ]</span>
+<span class="x">    ]</span>
+<span class="x">]</span>
+</code></pre>
+</div>
 </main></body>
 </html>
