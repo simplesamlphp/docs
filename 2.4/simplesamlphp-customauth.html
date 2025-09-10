@@ -650,6 +650,7 @@ A SSHA password is created like this:
         <span class="cm">/* Connect to the database. */</span>
         <span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PDO</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dsn</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">username</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">password</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">options</span><span class="p">);</span>
         <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">setAttribute</span><span class="p">(</span><span class="nx">PDO</span><span class="o">::</span><span class="na">ATTR_ERRMODE</span><span class="p">,</span> <span class="nx">PDO</span><span class="o">::</span><span class="na">ERRMODE_EXCEPTION</span><span class="p">);</span>
+        <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">setAttribute</span><span class="p">(</span><span class="nx">PDO</span><span class="o">::</span><span class="na">ATTR_EMULATE_PREPARES</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
 
         <span class="cm">/* Ensure that we are operating with UTF-8 encoding.</span>
 <span class="cm">         * This command is for MySQL. Other databases may need different commands.</span>
