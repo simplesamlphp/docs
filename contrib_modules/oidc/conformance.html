@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="openid-conformance">
+ OpenID Conformance
+</h1>
+<p>
+ This guide summarizes how to run the OpenID Foundation conformance tests
+against this module, both locally and using the hosted service.
+</p>
+<ul>
+ <li>
+  Run conformance tests locally
+ </li>
+ <li>
+  Run hosted tests
+ </li>
+</ul>
+<h2 id="run-conformance-tests-locally">
+ Run conformance tests locally
+</h2>
+<p>
+ This approach is best when you want to test changes without deploying.
+</p>
+<h3 id="run-conformance-images">
+ Run conformance images
+</h3>
+<p>
+ Clone, build, and run the conformance test suite:
+</p>
+<div class="highlight">
+ <pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://gitlab.com/openid/conformance-suite.git
+<span class="nb">cd</span><span class="w"> </span>conformance-suite
+git<span class="w"> </span>checkout<span class="w"> </span>release-v5.1.35
+<span class="nv">MAVEN_CACHE</span><span class="o">=</span>./m2<span class="w"> </span>docker-compose<span class="w"> </span>-f<span class="w"> </span>builder-compose.yml<span class="w"> </span>run<span class="w"> </span>builder
+docker-compose<span class="w"> </span>up
+</code></pre>
+</div>
+<p>
+ This starts the Java conformance app and a MongoDB server. Then:
+</p>
+<ul>
+ <li>
+  Visit
+  <a href="https://localhost:8443/">
+   https://localhost:8443/
+  </a>
+ </li>
+ <li>
+  Create a new plan:
+  "OpenID Connect Core: Basic Certification Profile Authorization server test"
+ </li>
+ <li>
+  Click the JSON tab and paste
+  <code>
+   conformance-tests/conformance-basic-local.json
+  </code>
+  from this repo.
+ </li>
+</ul>
+<p>
+ Next, run your SSP OIDC image.
+</p>
+<h3 id="run-ssp">
+ Run SSP
+</h3>
+<p>
+ Run SSP with OIDC on the same Docker network as the conformance tests so
+containers can communicate. See the "Docker Compose" section in the
+README for details.
+</p>
+<h3 id="run-conformance-tests-interactive">
+ Run conformance tests (interactive)
+</h3>
+<p>
+ The tests are interactive and will ask you to authenticate. Some tests
+require clearing cookies to confirm a scenario; others require existing
+session cookies. You may be redirected to
+ <code>
+  https://localhost.emobix.co.uk:8443/
+ </code>
+ (the Java app). Accept SSL
+warnings as needed.
+</p>
+<h3 id="run-automated-tests">
+ Run automated tests
+</h3>
+<p>
+ Once manual tests pass, you can
+ <a href="https://gitlab.com/openid/conformance-suite/-/wikis/Design/BrowserControl">
+  automate the browser portion
+ </a>
+ .
+</p>
+<p>
+ From the
+ <code>
+  simplesamlphp-module-oidc
+ </code>
+ directory:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c1"># Adjust to your conformance-suite installation path</span>
+<span class="nv">OIDC_MODULE_FOLDER</span><span class="o">=</span>.
+
+<span class="c1"># Basic profile</span>
+conformance-suite/scripts/run-test-plan.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--expected-failures-file<span class="w"> </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/basic-warnings.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--expected-skips-file<span class="w"> </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/basic-skips.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"oidcc-basic-certification-test-plan[server_metadata=discovery][client_registration=static_client]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/conformance-basic-ci.json
+
+<span class="c1"># Implicit profile</span>
+conformance-suite/scripts/run-test-plan.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--expected-failures-file<span class="w"> </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/implicit-warnings.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--expected-skips-file<span class="w"> </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/implicit-skips.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"oidcc-implicit-certification-test-plan[server_metadata=discovery][client_registration=static_client]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/conformance-implicit-ci.json
+
+<span class="c1"># RP initiated back-channel logout</span>
+conformance-suite/scripts/run-test-plan.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"oidcc-backchannel-rp-initiated-logout-certification-test-plan[response_type=code][client_registration=static_client]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/conformance-back-channel-logout-ci.json
+
+<span class="c1"># RP initiated logout</span>
+conformance-suite/scripts/run-test-plan.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"oidcc-rp-initiated-logout-certification-test-plan[response_type=code][client_registration=static_client]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="si">${</span><span class="nv">OIDC_MODULE_FOLDER</span><span class="si">}</span>/conformance-tests/conformance-rp-initiated-logout-ci.json
+</code></pre>
+</div>
+<p>
+ Prerequisites: run the docker deploy image for conformance tests (see
+README) and the conformance test image first.
+</p>
+<h2 id="run-hosted-tests">
+ Run hosted tests
+</h2>
+<p>
+ The OpenID Foundation hosts the conformance testing software. Your OIDC
+OP must be publicly accessible on the internet.
+</p>
+<h3 id="deploy-ssp-oidc-image">
+ Deploy SSP OIDC image
+</h3>
+<p>
+ Use the docker image described in the README. It contains a SQLite DB
+pre-populated with data for the tests. Build and run the image.
+</p>
+<h3 id="register-and-create-conformance-tests">
+ Register and create conformance tests
+</h3>
+<p>
+ Visit
+ <a href="https://openid.net/certification/instructions/">
+  https://openid.net/certification/instructions/
+ </a>
+ .
+</p>
+<p>
+ Use the
+ <code>
+  json
+ </code>
+ configs under
+ <code>
+  conformance-tests
+ </code>
+ to configure your cloud
+instances. Update
+ <code>
+  discoveryUrl
+ </code>
+ to the deployed location. Adjust
+ <code>
+  alias
+ </code>
+ if it conflicts with existing test suites (it is used in redirect URIs).
+</p>
+</main></body>
+</html>

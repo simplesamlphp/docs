@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="upgrade-guide">
+ Upgrade guide
+</h1>
+<p>
+ This is an upgrade guide from versions 1 → 6. Review the changes and
+apply those relevant to your deployment.
+</p>
+<h2 id="version-5-to-6">
+ Version 5 to 6
+</h2>
+<p>
+ New features:
+</p>
+<ul>
+ <li>
+  Caching support for OIDC protocol artifacts like Access Tokens,
+Authorization Codes, Refresh Tokens, but also client and user data.
+The cache layer stands in front of the database store, so it can
+improve performance, especially in cases of a sudden surge of
+users trying to authenticate. Implementation is based on a Symfony
+Cache component, so any compatible Symfony cache adapter can be used.
+Check the module config file for more information on how to set the
+protocol cache.
+ </li>
+ <li>
+  Key rollover support - you can now define an additional (new)
+private / public key pair which will be published on the relevant
+JWKS endpoint or contained in JWKS property. In this way, you can
+"announce" a new public key which can then be fetched by RPs,
+and do the switch between "old" and "new" key pair when you
+find appropriate.
+ </li>
+ <li>
+  OpenID Federation capabilities:
+  <ul>
+   <li>
+    Automatic client registration using a Request Object (passing it by value)
+   </li>
+   <li>
+    Federation participation limiting based on Trust Marks
+   </li>
+   <li>
+    Endpoint for issuing a configuration entity statement
+(statement about itself)
+   </li>
+   <li>
+    Fetch endpoint for issuing statements about subordinates
+(registered clients)
+   </li>
+   <li>
+    (from v6.1) Subordinate listing endpoint
+   </li>
+   <li>
+    Clients can now be configured with new properties:
+    <ul>
+     <li>
+      Entity Identifier
+     </li>
+     <li>
+      Supported OpenID Federation Registration Types
+     </li>
+     <li>
+      Federation JWKS
+     </li>
+     <li>
+      Protocol JWKS, JWKS URI and Signed JWKS URI,
+     </li>
+     <li>
+      Registration type (manual, federated_automatic, or other in the future)
+     </li>
+     <li>
+      Is Federated flag (indicates participation in federation context)
+     </li>
+     <li>
+      Timestamps: created_at, updated_at, expires_at
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>
+  Improved AuthProc filter support
+  <ul>
+   <li>
+    Support authproc filters that need to redirect and later resume processing
+    <ul>
+     <li>
+      <code>
+       consent
+      </code>
+      and
+      <code>
+       preprodwarning
+      </code>
+      are two authprocs that redirect for
+user interaction and are now supported
+     </li>
+    </ul>
+   </li>
+   <li>
+    Uses SSP's ProcessingChain class for closer alignment with SAML IdP
+configuration.
+    <ul>
+     <li>
+      Allows additional configuration of authprocs in the main
+      <code>
+       config.php
+      </code>
+      under key
+      <code>
+       authproc.oidc
+      </code>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>
+  Authorization endpoint now also supports sending request parameters using
+HTTP POST method, in addition to GET.
+ </li>
+ <li>
+  Added support for passing authorization request parameters as JWTs,
+specifically - passing a Request Object by Value:
+  <a href="https://openid.net/specs/openid-connect-core-1_0.html#RequestObject">
+   https://openid.net/specs/openid-connect-core-1_0.html#RequestObject
+  </a>
+ </li>
+ <li>
+  Added support for
+  <code>
+   private_key_jwt
+  </code>
+  client authentication method at
+token endpoint:
+  <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">
+   https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
+  </a>
+ </li>
+</ul>
+<p>
+ New configuration options:
+</p>
+<ul>
+ <li>
+  (from v6.1) Show
+  <code>
+   claims_supported
+  </code>
+  claim in OP Discovery endpoint -
+you can now choose to show supported claims, as is recommended by OpenID
+Connect Discovery specification
+  <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">
+   https://openid.net/specs/openid-connect-discovery-1_0.html
+  </a>
+  .
+ </li>
+ <li>
+  (optional) Issuer - you can now override the issuer (OP identifier).
+If not set, it falls back to the current scheme, host, and optionally
+a port (as in all previous module versions).
+ </li>
+ <li>
+  (optional) Protocol caching adapter and its arguments
+ </li>
+ <li>
+  (optional) OpenID Federation-related options (needed if federation
+capabilities are to be used):
+  <ul>
+   <li>
+    enabled or disabled federation capabilities
+   </li>
+   <li>
+    valid trust anchors
+   </li>
+   <li>
+    authority hints
+   </li>
+   <li>
+    federation caching adapter and its arguments
+   </li>
+   <li>
+    PKI keys - federation keys used, for example, to sign federation entity
+statements
+   </li>
+   <li>
+    federation participation limiting based on Trust Marks for RPs
+   </li>
+   <li>
+    (from v6.1) own Trust Marks to dynamically fetch
+   </li>
+   <li>
+    signer algorithm
+   </li>
+   <li>
+    entity statement duration
+   </li>
+   <li>
+    organization name
+   </li>
+   <li>
+    display name
+   </li>
+   <li>
+    description
+   </li>
+   <li>
+    keywords
+   </li>
+   <li>
+    contacts
+   </li>
+   <li>
+    logo URI
+   </li>
+   <li>
+    policy URI
+   </li>
+   <li>
+    information URI
+   </li>
+   <li>
+    homepage URI (renamed to organization_uri in draft-43)
+   </li>
+   <li>
+    organization URI
+   </li>
+  </ul>
+ </li>
+</ul>
+<p>
+ Major impact changes:
+</p>
+<ul>
+ <li>
+  PHP version requirement was bumped to v8.2
+ </li>
+</ul>
+<p>
+ Medium impact changes:
+</p>
+<ul>
+ <li>
+  Database schema has been updated, so you'll have to run the DB migrations
+as described in the README file.
+ </li>
+ <li>
+  OIDC protocol endpoints ('authorization_endpoint', 'token_endpoint',
+'userinfo_endpoint', 'end_session_endpoint', 'jwks_uri') are now available as
+new routes which use Symfony routing and container mechanism. This was done as
+an effort to move to the default SimpleSAMLphp way of working with routes and
+services. New routes are now published by default in "OP Configuration"
+endpoint, which is now also available as
+  <code>
+   &lt;basepath&gt;/module.php/oidc/.well-known/openid-configuration
+  </code>
+  . If you are
+publishing that URL as a "well-known" URL ('/.well-known/openid-configuration'),
+make sure to update your web server configuration to reflect that change
+(you can refer to README for examples). All old routes (routes served by
+PHP files in the public folder) will stay available in this version,
+which should allow all RPs to update OP configuration in time.
+Old routes will be removed in version 7.
+ </li>
+ <li>
+  If you are using Apache web server: you should check the README file which
+now contains a note on how to configure Apache to preserve Authorization
+HTTP headers with a Bearer token scheme (stripping of this header in Apache is a
+known
+  <a href="https://github.com/symfony/symfony/issues/19693">
+   issue
+  </a>
+  ). If you don't
+set this config, you'll now get warnings about this situation in your logs.
+The new authproc filter processing will look in an additional location for
+filters, in the main
+  <code>
+   config.php
+  </code>
+  under key
+  <code>
+   authproc.oidc
+  </code>
+ </li>
+ <li>
+  Removed support for plain OAuth2 Implicit flow (response_type
+  <code>
+   token
+  </code>
+  ),
+because of very low usage. Note that the OIDC Implicit flow is still supported
+(response_type
+  <code>
+   id_token token
+  </code>
+  or
+  <code>
+   id_token
+  </code>
+  ).
+ </li>
+</ul>
+<p>
+ Low-impact changes:
+</p>
+<ul>
+ <li>
+  In an effort to move to SimpleSAMLphp way of working with user interface (UI),
+the client management UI was updatedto extend from the SimpleSAMLphp base
+template. In addition, we have also introduced some configuration overview
+pages where you can take a quick view of some of the configuration values for
+the module. OIDC related pages are now available from the main SimpleSAMLphp
+menu in the Administration area.
+ </li>
+ <li>
+  The OIDC config template file has been moved from
+  <code>
+   config-templates/module_oidc.php
+  </code>
+  to
+  <code>
+   config/module_oidc.php.dist
+  </code>
+  .
+This is only relevant for new installations, since initially it is necessary
+to copy the template file to the default SSP config dir.
+ </li>
+</ul>
+<p>
+ Below are also some internal changes that should not have an impact on the
+OIDC OP implementers. However, if you are using this module as a library or
+extending from it, you will probably encounter breaking changes, since a lot
+of code has been refactored:
+</p>
+<ul>
+ <li>
+  Upgraded to v5 of
+  <a href="https://github.com/lcobucci/jwt">
+   lcobucci/jwt
+  </a>
+ </li>
+ <li>
+  Upgraded to v3 of
+  <a href="https://github.com/laminas/laminas-diactoros">
+   laminas/laminas-diactoros
+  </a>
+ </li>
+ <li>
+  SimpleSAMLphp version used during development was bumped to v2.3
+ </li>
+ <li>
+  In Authorization Code Flow, a new validation was added which checks for
+'openid' value in the 'scope' parameter. Up to now, the 'openid' value was
+dynamically added if not present. In Implicit Code Flow this validation was
+already present.
+ </li>
+ <li>
+  Removed importer from the legacy OAuth2 module, as it is very unlikely that
+someone will upgrade from the legacy OAuth2 module to v6 of oidc module.
+If needed, one can upgrade to earlier versions of the
+  <code>
+   oidc
+  </code>
+  module, and then
+to v6.
+ </li>
+</ul>
+<h2 id="version-4-to-5">
+ Version 4 to 5
+</h2>
+<p>
+ Major impact changes:
+</p>
+<ul>
+ <li>
+  PHP version requirement was bumped to v8.1
+ </li>
+</ul>
+<p>
+ Medium impact changes:
+</p>
+<ul>
+ <li>
+  Module config options in the file 'module_oidc.php' are now using constants
+for config keys. The values for constants are taken from the previous version
+of the module, so theoretically you don't have to rewrite your current config
+file, although it is recommended to do so.
+ </li>
+</ul>
+<p>
+ Low-impact changes:
+</p>
+<ul>
+ <li>
+  Removed the 'kid' config option which was not used in the codebase
+(from v2 of the module, the 'kid' value is the fingerprint of the certificate).
+ </li>
+</ul>
+<p>
+ Below are some internal changes that should not have an impact on the OIDC OP
+implementers. However, if you are using this module as a library or extending
+from it, you will probably encounter breaking changes, since a lot of code
+has been refactored:
+</p>
+<ul>
+ <li>
+  psalm error level set to 1, which needed a fair number of code adjustments
+ </li>
+ <li>
+  refactored to strict typing whenever possible (psalm can now infer
+types for &gt;99% of the codebase)
+ </li>
+ <li>
+  refactored to PHP v8.* (up to PHP v8.1) code styling whenever possible,
+like using constructor property promotion, match expressions...
+ </li>
+ <li>
+  removed dependency on steverhoades/oauth2-openid-connect-server
+(low maintenance)
+ </li>
+</ul>
+<h2 id="version-3-to-4">
+ Version 3 to 4
+</h2>
+<ul>
+ <li>
+  PHP version requirement was bumped to v8.0 to enable updating important
+dependent packages like 'league/oauth2-server' which has already moved to
+PHPv8 between their minor releases.
+ </li>
+ <li>
+  SimpleSAMLphp version used during development was bumped v2.0
+ </li>
+</ul>
+<h2 id="version-2-to-3">
+ Version 2 to 3
+</h2>
+<ul>
+ <li>
+  Module code was refactored to make it compatible with SimpleSAMLphp v2
+ </li>
+ <li>
+  The default key name was changed from oidc_module.pem to oidc_module.key.
+If you don't set a custom key name using the option 'privatekey' in a module
+config file, make sure to change the file name of the key from
+oidc_module.pem to oidc_module.key.
+ </li>
+ <li>
+  Removed config option 'alwaysIssueRefreshToken'
+ </li>
+ <li>
+  Removed config option 'alwaysAddClaimsToIdToken'
+ </li>
+</ul>
+<h2 id="version-1-to-2">
+ Version 1 to 2
+</h2>
+<p>
+ There are many DB changes that need to be applied. Perform the migration by
+logging in as an SSP admin to
+ <a href="https://server/simplesaml/module.php/oidc/install.php">
+  https://server/simplesaml/module.php/oidc/install.php
+ </a>
+</p>
+<p>
+ An SSP admin should now use
+ <a href="https://server/simplesaml/module.php/oidc/admin-clients/">
+  https://server/simplesaml/module.php/oidc/admin-clients/
+ </a>
+ to manage clients. The previous
+ <code>
+  /clients/
+ </code>
+ path is for authorized users.
+</p>
+<p>
+ Review the changes to
+ <code>
+  config-templates/module_oidc.php
+ </code>
+ and apply relevant
+changes to your configuration. For example, claim types are now supported.
+</p>
+<p>
+ In version 1, in authorization code flow, user claims were always included in
+ID token, instead of only including them if the access token was not released,
+as per specification. Since changing this behavior is a potential breaking
+change for Relying Parties, in version 2 a config option
+'alwaysAddClaimsToIdToken' is introduced to enable OpenID Providers to keep
+the behavior from version 1 by setting it to 'true'.
+If 'alwaysAddClaimsToIdToken' is set to 'false', user claims will only be added
+to ID token if access token was not released. If an access token was released,
+user claims will have to be fetched from the 'userinfo' endpoint.
+Note that this option has only applied to authorization code flow since
+implicit flow was not available in version 1. If you are to use the spec
+compliant behavior, make sure to warn existing Relying Parties about the change.
+</p>
+<p>
+ Similarly, in version 1, in authorization code flow, the refresh token was
+always released, instead of only releasing it if the client specifically
+requested it using the 'offline_access' scope. Since changing this
+behavior is a potential breaking change for Relying Parties, in version 2
+a config option 'alwaysIssueRefreshToken' is introduced to enable OpenID
+Providers to keep the behavior from version 1 by setting it to 'true'.
+If 'alwaysIssueRefreshToken' is set to 'false', refresh token will be released
+only if it was requested using 'offline_access' scope. If you are to use the
+spec compliant behavior, make sure to warn existing Relying Parties about
+the change. Note that in that case the client must have the
+'offline_access' scope registered.
+</p>
+<p>
+ Token endpoint was renamed from '.../access_token.php' to '.../token.php'.
+This is a potential breaking change for clients that do not fetch
+OP configuration from the /.well-known/openid-configuration URI dynamically,
+but instead hardcode endpoints in their configuration. You should probably
+warn existing Relying Parties about this change.
+</p>
+</main></body>
+</html>

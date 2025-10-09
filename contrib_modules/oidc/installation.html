@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="installation">
+ Installation
+</h1>
+<p>
+ This guide walks you through installing, enabling, and preparing the OIDC
+module in SimpleSAMLphp.
+</p>
+<h2 id="1-install-the-module">
+ 1. Install the module
+</h2>
+<p>
+ Run:
+</p>
+<div class="highlight">
+ <pre><span></span><code>composer<span class="w"> </span>require<span class="w"> </span>simplesamlphp/simplesamlphp-module-oidc
+</code></pre>
+</div>
+<h2 id="2-configure-the-module">
+ 2. Configure the module
+</h2>
+<p>
+ Copy the configuration template into your SimpleSAMLphp config directory
+and review all options:
+</p>
+<div class="highlight">
+ <pre><span></span><code>cp<span class="w"> </span>modules/oidc/config/module_oidc.php.dist<span class="w"> </span>config/module_oidc.php
+</code></pre>
+</div>
+<h2 id="3-configure-the-database">
+ 3. Configure the database
+</h2>
+<p>
+ The module uses SimpleSAMLphp's database feature to store access and
+refresh tokens, user data, and other artifacts. Edit
+ <code>
+  config/config.php
+ </code>
+ and ensure at least the following parameters are set:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">'database.dsn' =&gt; 'mysql:host=server;dbname=simplesamlphp;charset=utf8',</span>
+<span class="x">'database.username' =&gt; 'user',</span>
+<span class="x">'database.password' =&gt; 'password',</span>
+</code></pre>
+</div>
+<p>
+ Note: SQLite, PostgreSQL, and MySQL are supported.
+</p>
+<h2 id="4-create-rsa-key-pairs">
+ 4. Create RSA key pairs
+</h2>
+<p>
+ ID and Access tokens are signed JWTs. Create a public/private RSA key
+pair for OIDC protocol operations. If you plan to use OpenID Federation,
+create a separate key pair for federation operations.
+</p>
+<p>
+ Generate private keys without a passphrase:
+</p>
+<div class="highlight">
+ <pre><span></span><code>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module.key<span class="w"> </span><span class="m">3072</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module_federation.key<span class="w"> </span><span class="m">3072</span>
+</code></pre>
+</div>
+<p>
+ Generate private keys with a passphrase:
+</p>
+<div class="highlight">
+ <pre><span></span><code>openssl<span class="w"> </span>genrsa<span class="w"> </span>-passout<span class="w"> </span>pass:myPassPhrase<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module.key<span class="w"> </span><span class="m">3072</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-passout<span class="w"> </span>pass:myPassPhrase<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module_federation.key<span class="w"> </span><span class="m">3072</span>
+</code></pre>
+</div>
+<p>
+ Extract public keys:
+</p>
+<p>
+ Without passphrase:
+</p>
+<div class="highlight">
+ <pre><span></span><code>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>cert/oidc_module.key<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module.crt
+openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>cert/oidc_module_federation.key<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module_federation.crt
+</code></pre>
+</div>
+<p>
+ With a passphrase:
+</p>
+<div class="highlight">
+ <pre><span></span><code>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>cert/oidc_module.key<span class="w"> </span>-passin<span class="w"> </span>pass:myPassPhrase<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module.crt
+openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>cert/oidc_module_federation.key<span class="w"> </span>-passin<span class="w"> </span>pass:myPassPhrase<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>cert/oidc_module_federation.crt
+</code></pre>
+</div>
+<p>
+ If you use different file names or a passphrase, update
+ <code>
+  config/module_oidc.php
+ </code>
+ accordingly.
+</p>
+<h2 id="5-enable-the-module">
+ 5. Enable the module
+</h2>
+<p>
+ Edit
+ <code>
+  config/config.php
+ </code>
+ and enable
+ <code>
+  oidc
+ </code>
+ :
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">'module.enable' =&gt; [</span>
+<span class="x">    'exampleauth' =&gt; false,</span>
+<span class="x">    'core' =&gt; true,</span>
+<span class="x">    'admin' =&gt; true,</span>
+<span class="x">    'saml' =&gt; true,</span>
+<span class="x">    // enable oidc module</span>
+<span class="x">    'oidc' =&gt; true,</span>
+<span class="x">],</span>
+</code></pre>
+</div>
+<h2 id="6-run-database-migrations">
+ 6. Run database migrations
+</h2>
+<p>
+ Run the built-in migrations to create required tables.
+</p>
+<p>
+ Option A: Web UI
+</p>
+<ul>
+ <li>
+  Go to the admin area, then
+  <code>
+   OIDC
+  </code>
+  &gt;
+  <code>
+   Database Migrations
+  </code>
+  and click the
+  available button.
+ </li>
+</ul>
+<p>
+ Option B: Command line
+</p>
+<div class="highlight">
+ <pre><span></span><code>php<span class="w"> </span>modules/oidc/bin/install.php
+</code></pre>
+</div>
+<h2 id="7-next-steps">
+ 7. Next steps
+</h2>
+<ul>
+ <li>
+  Configure caches, endpoints, and other options:
+  see
+  <a href="configuration.md.html">
+   Configuration
+  </a>
+ </li>
+ <li>
+  Administer clients from the UI:
+  see
+  <a href="configuration.md#relying-party-rp-administration.html">
+   Relying Party (RP) Administration
+  </a>
+ </li>
+</ul>
+</main></body>
+</html>

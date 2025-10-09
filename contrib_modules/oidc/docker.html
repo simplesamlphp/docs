@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="using-docker">
+ Using Docker
+</h1>
+<p>
+ This document shows how to run and test the module with Docker.
+</p>
+<ul>
+ <li>
+  Run with the current git branch (live mount)
+ </li>
+ <li>
+  Local testing with other DBs
+ </li>
+ <li>
+  Testing AuthProc filters
+ </li>
+ <li>
+  Build image for conformance tests
+ </li>
+ <li>
+  Docker Compose
+ </li>
+</ul>
+<h2 id="run-with-the-current-git-branch-live-mount">
+ Run with the current git branch (live mount)
+</h2>
+<p>
+ Run an SSP image with the current OIDC module mounted read-only. Changes
+in your checkout are reflected live in the container.
+</p>
+<div class="highlight">
+ <pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>ssp-oidc-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>,target<span class="o">=</span>/var/simplesamlphp/staging-modules/oidc,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">STAGINGCOMPOSERREPOS</span><span class="o">=</span>oidc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">COMPOSER_REQUIRE</span><span class="o">=</span><span class="s2">"simplesamlphp/simplesamlphp-module-oidc:@dev"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SSP_ADMIN_PASSWORD</span><span class="o">=</span>secret1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/module_oidc.php"</span>,target<span class="o">=</span>/var/simplesamlphp/config/module_oidc.php,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/authsources.php"</span>,target<span class="o">=</span>/var/simplesamlphp/config/authsources.php,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/config-override.php"</span>,target<span class="o">=</span>/var/simplesamlphp/config/config-override.php,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/oidc_module.crt"</span>,target<span class="o">=</span>/var/simplesamlphp/cert/oidc_module.crt,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/oidc_module.key"</span>,target<span class="o">=</span>/var/simplesamlphp/cert/oidc_module.key,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/apache-override.cf"</span>,target<span class="o">=</span>/etc/apache2/sites-enabled/ssp-override.cf,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">443</span>:443<span class="w"> </span>cirrusid/simplesamlphp:v2.3.5
+</code></pre>
+</div>
+<p>
+ Then visit:
+</p>
+<ul>
+ <li>
+  <a href="https://localhost/simplesaml/">
+   https://localhost/simplesaml/
+  </a>
+ </li>
+</ul>
+<p>
+ The OIDC configuration endpoint is available at:
+</p>
+<ul>
+ <li>
+  <a href="https://localhost/.well-known/openid-configuration">
+   https://localhost/.well-known/openid-configuration
+  </a>
+ </li>
+</ul>
+<h2 id="local-testing-with-other-dbs">
+ Local testing with other DBs
+</h2>
+<p>
+ You can test it against another database such as PostgreSQL.
+</p>
+<p>
+ 1 - Create a Docker network:
+</p>
+<div class="highlight">
+ <pre><span></span><code>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>ssp-oidc-test
+</code></pre>
+</div>
+<p>
+ 2 - Run a DB container:
+</p>
+<div class="highlight">
+ <pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>oidc-db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="w"> </span>ssp-oidc-test<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>oidcpass<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">25432</span>:5432<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>postgres:15
+</code></pre>
+</div>
+<p>
+ 3 - Run SSP (from the prior command) with these additions:
+</p>
+<div class="highlight">
+ <pre><span></span><code>-e<span class="w"> </span>DB.DSN<span class="o">=</span><span class="s2">"pgsql:host=oidc-db;dbname=postgres"</span><span class="w"> </span><span class="se">\</span>
+-e<span class="w"> </span>DB.USERNAME<span class="o">=</span><span class="s2">"postgres"</span><span class="w"> </span><span class="se">\</span>
+-e<span class="w"> </span>DB.PASSWORD<span class="o">=</span><span class="s2">"oidcpass"</span><span class="w"> </span><span class="se">\</span>
+--network<span class="w"> </span>ssp-oidc-test<span class="w"> </span><span class="se">\</span>
+</code></pre>
+</div>
+<h2 id="testing-authproc-filters">
+ Testing AuthProc filters
+</h2>
+<p>
+ Enable the example AuthProc filters in
+ <code>
+  module_oidc.php
+ </code>
+ that set
+ <code>
+  firstname
+ </code>
+ and
+ <code>
+  sn
+ </code>
+ and configure the preprod warning filter. This shows
+that an authproc can redirect and processing resumes.
+</p>
+<p>
+ When running Docker, adjust
+ <code>
+  COMPOSER_REQUIRE
+ </code>
+ to include the module:
+</p>
+<div class="highlight">
+ <pre><span></span><code>-e "COMPOSER_REQUIRE=simplesamlphp/simplesamlphp-module-oidc:@dev \
+ simplesamlphp/simplesamlphp-module-preprodwarning"
+</code></pre>
+</div>
+<p>
+ You can register a client from
+ <a href="https://oidcdebugger.com/">
+  https://oidcdebugger.com/
+ </a>
+ to test.
+</p>
+<h2 id="build-image-for-conformance-tests">
+ Build image for conformance tests
+</h2>
+<p>
+ Build an image that contains a pre-configured sqlite database.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="nv">GIT_BRANCH</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>--abbrev-ref<span class="w"> </span>HEAD<span class="k">)</span>
+<span class="nv">IMAGE_TAG</span><span class="o">=</span><span class="k">$(</span>tr<span class="w"> </span><span class="s1">'/'</span><span class="w"> </span><span class="s1">'_'</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">"</span><span class="nv">$GIT_BRANCH</span><span class="s2">"</span><span class="k">)</span>
+
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="s2">"simplesamlphp/simplesamlphp-oidc:dev-</span><span class="nv">$IMAGE_TAG</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--build-arg<span class="w"> </span><span class="nv">OIDC_VERSION</span><span class="o">=</span>dev-<span class="si">${</span><span class="nv">GIT_BRANCH</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-f<span class="w"> </span>docker/Dockerfile<span class="w"> </span>.
+
+docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>ssp-oidc-dev-image<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SSP_ADMIN_PASSWORD</span><span class="o">=</span>secret1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">443</span>:443<span class="w"> </span>simplesamlphp/simplesamlphp-oidc:dev-<span class="nv">$IMAGE_TAG</span>
+</code></pre>
+</div>
+<p>
+ Publish the image where you can retrieve it. Example:
+</p>
+<div class="highlight">
+ <pre><span></span><code>docker<span class="w"> </span>tag<span class="w"> </span><span class="s2">"simplesamlphp/simplesamlphp-oidc:dev-</span><span class="nv">$IMAGE_TAG</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"cirrusid/simplesamlphp-oidc:dev-</span><span class="nv">$IMAGE_TAG</span><span class="s2">"</span>
+
+docker<span class="w"> </span>push<span class="w"> </span><span class="s2">"cirrusid/simplesamlphp-oidc:dev-</span><span class="nv">$IMAGE_TAG</span><span class="s2">"</span>
+</code></pre>
+</div>
+<p>
+ The DB is not on a shared volume. Changes are lost if the container
+restarts. Backup example:
+</p>
+<div class="highlight">
+ <pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ssp-oidc-dev-image<span class="w"> </span>sqlite3<span class="w"> </span>/var/simplesamlphp/data/mydb.sq3<span class="w"> </span><span class="s1">'.dump'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&gt;<span class="w"> </span>docker/conformance.sql
+</code></pre>
+</div>
+<p>
+ Conformance tests are easier to run locally. See
+ <a href="conformance.md.html">
+  Conformance
+ </a>
+ .
+</p>
+<h2 id="docker-compose">
+ Docker Compose
+</h2>
+<p>
+ Docker Compose runs multiple containers to ease testing. It builds an
+image containing the OIDC module. You can remove
+ <code>
+  --build
+ </code>
+ to reuse an
+existing container.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c1"># Use current branch/git checkout. Composer installs local checkout</span>
+<span class="nv">OIDC_VERSION</span><span class="o">=</span>@dev<span class="w"> </span>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>--project-directory<span class="w"> </span>.<span class="w"> </span>up<span class="w"> </span>--build
+
+<span class="c1"># Use a specific module version</span>
+<span class="nv">OIDC_VERSION</span><span class="o">=</span>dev-master<span class="w"> </span>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>--project-directory<span class="w"> </span>.<span class="w"> </span>up<span class="w"> </span>--build
+</code></pre>
+</div>
+<p>
+ Visit the OP and verify a few clients exist:
+</p>
+<ul>
+ <li>
+  <a href="https://op.local.stack-dev.cirrusidentity.com/simplesaml/">
+   https://op.local.stack-dev.cirrusidentity.com/simplesaml/
+  </a>
+ </li>
+</ul>
+</main></body>
+</html>

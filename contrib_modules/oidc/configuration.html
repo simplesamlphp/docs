@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="configuration">
+ Configuration
+</h1>
+<p>
+ This guide summarizes key configuration topics for the OIDC module.
+It complements the inline comments in
+ <code>
+  config/module_oidc.php
+ </code>
+ .
+</p>
+<ul>
+ <li>
+  Caching protocol artifacts
+ </li>
+ <li>
+  Relying Party (RP) administration UI
+ </li>
+ <li>
+  Cron integration
+ </li>
+ <li>
+  Endpoint locations and well-known URLs
+ </li>
+ <li>
+  Key rollover
+ </li>
+ <li>
+  Apache Authorization header note
+ </li>
+ <li>
+  Private scopes
+ </li>
+ <li>
+  Attribute translation
+ </li>
+ <li>
+  Auth Proc filters (OIDC)
+ </li>
+ <li>
+  Client registration permissions
+ </li>
+</ul>
+<h2 id="caching-protocol-artifacts">
+ Caching protocol artifacts
+</h2>
+<p>
+ The configured database is the primary storage for protocol artifacts:
+access tokens, authorization codes, refresh tokens, clients, and user
+records. In production, you should also configure a cache in front of the
+DB to improve performance during traffic spikes.
+</p>
+<p>
+ Caching uses Symfony Cache, so any compatible adapter can be used. See the
+ <code>
+  module_oidc.php
+ </code>
+ configuration file for adapter selection and parameters.
+</p>
+<h2 id="relying-party-rp-administration">
+ Relying Party (RP) administration
+</h2>
+<p>
+ The module provides a UI to manage clients (create, read, update, delete).
+After you create the database schema, go to the SimpleSAMLphp admin area:
+</p>
+<ul>
+ <li>
+  OIDC &gt; Client Registry
+ </li>
+</ul>
+<p>
+ Notes:
+</p>
+<ul>
+ <li>
+  Clients can be public or confidential.
+ </li>
+ <li>
+  Public clients using Authorization Code flow must send PKCE parameters.
+ </li>
+ <li>
+  Client ID and secret are generated; use the "show" button to reveal.
+ </li>
+</ul>
+<h2 id="cron-integration">
+ Cron integration
+</h2>
+<p>
+ Enable and configure the SimpleSAMLphp cron module to purge expired tokens:
+ <a href="https://simplesamlphp.org/docs/stable/cron/cron.html">
+  cron
+ </a>
+</p>
+<h2 id="endpoint-locations-and-well-known-urls">
+ Endpoint locations and well-known URLs
+</h2>
+<p>
+ After deployment, visit the SimpleSAMLphp admin area:
+</p>
+<ul>
+ <li>
+  OIDC &gt; Protocol / Federation Settings
+ </li>
+</ul>
+<p>
+ There you can see discovery URLs. Typical discovery endpoints are:
+</p>
+<ul>
+ <li>
+  OpenID Connect Discovery:
+  <a href="https://yourserver/simplesaml/module.php/oidc/.well-known/openid-configuration">
+   https://yourserver/simplesaml/module.php/oidc/.well-known/openid-configuration
+  </a>
+ </li>
+ <li>
+  OpenID Federation configuration:
+  <a href="https://yourserver/simplesaml/module.php/oidc/.well-known/openid-federation">
+   https://yourserver/simplesaml/module.php/oidc/.well-known/openid-federation
+  </a>
+ </li>
+</ul>
+<p>
+ You may publish these as ".well-known" URLs at the web root using your
+web server. For example, for
+ <code>
+  openid-configuration
+ </code>
+ :
+</p>
+<p>
+ nginx:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="k">location</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/.well-known/openid-configuration</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">rewrite</span><span class="w"> </span><span class="s">^(.*)</span>$<span class="w"> </span><span class="s">/simplesaml/module.php/oidc/.well-known/openid-configuration</span><span class="w"> </span><span class="s">break</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">https://localhost</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>
+ Apache:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="nb">RewriteEngine</span><span class="w"> </span><span class="k">On</span>
+<span class="nb">RewriteRule</span><span class="w"> </span>^/.well-known/openid-configuration(.*)<span class="w"> </span>\
+<span class="w">  </span><span class="sx">/simplesaml/module.php/oidc/.well-known/openid-configuration</span>$1<span class="w"> </span>[PT]
+</code></pre>
+</div>
+<h2 id="key-rollover">
+ Key rollover
+</h2>
+<p>
+ You can configure an additional key pair to publish via JWKS endpoints or
+properties. This lets RPs pre-fetch the new public key before you switch
+signing to the new private key. Once RPs have cached the new JWKS, you can
+perform the key switch.
+</p>
+<h2 id="apache-authorization-header-note">
+ Apache Authorization header note
+</h2>
+<p>
+ Apache may strip the
+ <code>
+  Authorization
+ </code>
+ header (Bearer) from requests (a known
+ <a href="https://github.com/symfony/symfony/issues/19693">
+  issue
+ </a>
+ ).
+</p>
+<p>
+ Although the module includes a fallback, it has performance implications.
+Configure Apache to preserve the header using one of these snippets:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="nb">RewriteEngine</span><span class="w"> </span><span class="k">On</span>
+<span class="nb">RewriteCond</span><span class="w"> </span>%{HTTP:Authorization}<span class="w"> </span>.+
+<span class="nb">RewriteRule</span><span class="w"> </span>.*<span class="w"> </span>-<span class="w"> </span>[E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</code></pre>
+</div>
+<p>
+ or
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="nb">SetEnvIf</span><span class="w"> </span>Authorization<span class="w"> </span><span class="s2">"(.*)"</span><span class="w"> </span>HTTP_AUTHORIZATION=$1
+</code></pre>
+</div>
+<p>
+ If not set, you will see warnings about this in the logs.
+</p>
+<h2 id="private-scopes">
+ Private scopes
+</h2>
+<p>
+ The module supports the standard scopes:
+ <code>
+  openid
+ </code>
+ ,
+ <code>
+  email
+ </code>
+ ,
+ <code>
+  address
+ </code>
+ ,
+ <code>
+  phone
+ </code>
+ , and
+ <code>
+  profile
+ </code>
+ . You can add private scopes in
+ <code>
+  module_oidc.php
+ </code>
+ :
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">\SimpleSAML\Module\oidc\ModuleConfig</span><span class="o">::</span><span class="na">OPTION_AUTH_CUSTOM_SCOPES</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'private'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'private scope'</span><span class="p">,</span>
+            <span class="s1">'claim_name_prefix'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span>
+            <span class="s1">'are_multiple_claim_values_allowed'</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+            <span class="s1">'attributes'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'national_document_id'</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre>
+</div>
+<h2 id="attribute-translation">
+ Attribute translation
+</h2>
+<p>
+ Default SAML-to-OIDC claim mapping follows the
+ <a href="https://wiki.refeds.org/display/GROUPS/Mapping+SAML+attributes+to+OIDC+Claims">
+  REFEDS guidance
+ </a>
+ .
+</p>
+<p>
+ You can change or extend this mapping in
+ <code>
+  module_oidc.php
+ </code>
+ . Example:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">\SimpleSAML\Module\oidc\ModuleConfig</span><span class="o">::</span><span class="na">OPTION_AUTH_SAML_TO_OIDC_TRANSLATE_TABLE</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="c1">// Overwrite default mapping</span>
+        <span class="s1">'sub'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'uid'</span><span class="p">,</span>
+            <span class="s1">'eduPersonPrincipalName'</span><span class="p">,</span>
+            <span class="s1">'eduPersonTargetedID'</span><span class="p">,</span>
+            <span class="s1">'eduPersonUniqueId'</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="c1">// Remove default mapping by setting an empty array</span>
+        <span class="s1">'family_name'</span> <span class="o">=&gt;</span> <span class="p">[],</span>
+
+        <span class="c1">// New claim created from SAML attribute</span>
+        <span class="s1">'national_document_id'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'schacPersonalUniqueId'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre>
+</div>
+<h2 id="auth-proc-filters-oidc">
+ Auth Proc filters (OIDC)
+</h2>
+<p>
+ Standard SAML Auth Proc Filters do not run during OIDC authN because not
+all SAML entities are present (like a Service Provider). Instead, use the
+ <code>
+  authproc.oidc
+ </code>
+ configuration option to define filters specific to OIDC.
+</p>
+<p>
+ The OIDC authN state does not include all keys present in SAML authN.
+Available SAML-like keys include:
+</p>
+<ul>
+ <li>
+  ['Attributes']
+ </li>
+ <li>
+  ['Authority']
+ </li>
+ <li>
+  ['AuthnInstant']
+ </li>
+ <li>
+  ['Expire']
+ </li>
+</ul>
+<p>
+ Source and Destination entity IDs correspond to OP issuer and Client ID:
+</p>
+<ul>
+ <li>
+  ['Source']['entityid']      → OP issuer ID
+ </li>
+ <li>
+  ['Destination']['entityid'] → RP (client) ID
+ </li>
+</ul>
+<p>
+ Additional OIDC data in the state:
+</p>
+<ul>
+ <li>
+  ['Oidc']['OpenIdProviderMetadata']
+ </li>
+ <li>
+  ['Oidc']['RelyingPartyMetadata']
+ </li>
+ <li>
+  ['Oidc']['AuthorizationRequestParameters']
+ </li>
+</ul>
+<p>
+ Example filter configuration:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">\SimpleSAML\Module\oidc\ModuleConfig</span><span class="o">::</span><span class="na">OPTION_AUTH_PROCESSING_FILTERS</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="mi">50</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'core:AttributeAdd'</span><span class="p">,</span>
+            <span class="s1">'groups'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'members'</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre>
+</div>
+<h2 id="client-registration-permissions">
+ Client registration permissions
+</h2>
+<p>
+ You can allow users to register their own clients. Control this via the
+ <code>
+  permissions
+ </code>
+ setting in
+ <code>
+  module_oidc.php
+ </code>
+ .
+</p>
+<p>
+ Permissions expose functionality to specific users. In the following
+example, a user's
+ <code>
+  eduPersonEntitlement
+ </code>
+ is examined. To perform an action
+requiring the
+ <code>
+  client
+ </code>
+ permission (register/edit/delete a client) the user
+needs one of the listed entitlements.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">\SimpleSAML\Module\oidc\ModuleConfig</span><span class="o">::</span><span class="na">OPTION_ADMIN_UI_PERMISSIONS</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'attribute'</span> <span class="o">=&gt;</span> <span class="s1">'eduPersonEntitlement'</span><span class="p">,</span>
+        <span class="s1">'client'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'urn:example:oidc:manage:client'</span><span class="p">],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre>
+</div>
+<p>
+ Users can visit the following link for administration:
+</p>
+<ul>
+ <li>
+  <a href="https://example.com/simplesaml/module.php/oidc/clients/">
+   https://example.com/simplesaml/module.php/oidc/clients/
+  </a>
+ </li>
+</ul>
+</main></body>
+</html>
