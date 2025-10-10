@@ -1,4 +1,4 @@
-#! /bin/python3
+#!/bin/python3
 
 import markdown
 import glob
@@ -28,7 +28,11 @@ def md2html(md_file, html_file, file_name):
          
          if not a['href'].startswith(('http://', 'https://', '#')):
            if not a['href'].endswith(('html')):
-              a['href'] = a['href']+".html"
+              href = a['href']
+              # Handle case when href is a link to another markdown file (commonly used in repositories).
+              if href.endswith('.md'):
+                  href = href[:-3]
+              a['href'] = href + '.html'
        
            if (str(a['href']).find(":") > 0):
              a['href'] = a['href'].replace(":", "/")
