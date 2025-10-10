@@ -51,18 +51,23 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
-     <a href="/docs/2.4/index.html">
-      2.4 (stable)
-     </a>
-    </div>
-    <div class="menuitem">
      <a href="/docs/2.3/index.html">
-      2.3
+      2.3 (stable)
      </a>
     </div>
     <div class="menuitem">
      <a href="/docs/2.2/index.html">
       2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
      </a>
     </div>
     <div class="menuitem first">
@@ -168,23 +173,6 @@
  </dt>
  <dd>
   The name of the attribute we should use as the unique user ID.
- </dd>
- <dt>
-  <code>
-   identifyingAttributes
-  </code>
- </dt>
- <dd>
-  An array of attribute names to consider for the unique user ID.
- </dd>
- <dd>
-  The first attribute found in this array that's being released to the SP
- </dd>
- <dd>
-  will be used. Note that using this option means you must not also use
- </dd>
- <dd>
-  identifyingAttribute.
  </dd>
  <dt>
   <code>
@@ -464,7 +452,7 @@ This can be used to set the
       ],
       3 =&gt; [
           'class' =&gt; 'saml:AttributeNameID',
-          'identifyingAttributes' =&gt; ['mail','eduPersonPrincipalName'],
+          'identifyingAttribute' =&gt; 'mail',
           'Format' =&gt; 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
       ],
   ],

@@ -51,18 +51,23 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
-     <a href="/docs/2.4/index.html">
-      2.4 (stable)
-     </a>
-    </div>
-    <div class="menuitem">
      <a href="/docs/2.3/index.html">
-      2.3
+      2.3 (stable)
      </a>
     </div>
     <div class="menuitem">
      <a href="/docs/2.2/index.html">
       2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
      </a>
     </div>
     <div class="menuitem first">
@@ -248,10 +253,7 @@ Please see the
  Metadata signing
 </h2>
 <p>
- SimpleSAMLphp supports signing of the metadata it generates.
-</p>
-<p>
- Metadata signing is configured by four options:
+ SimpleSAMLphp supports signing of the metadata it generates. Metadata signing is configured by four options:
 </p>
 <ul>
  <li>
@@ -329,12 +331,30 @@ Please see the
  <code>
   config/config.php
  </code>
- -file, or per SP/IdP by adding them to the hosted
-metadata for the SP/IdP. The configuration in the metadata for the
-SP/IdP takes precedence over the global configuration. Note that if
-wish to set the metadata.sign.privatekey and metadata.sign.certificate
-in a metadata file you need to also set metadata.sign.enable=true in
-that metadata file.
+ -file, or per SP/IdP by adding them to the hosted metadata for the SP/IdP. The configuration in the metadata for the SP/IdP takes precedence over the global configuration.
+</p>
+<p>
+ There is also an additional fallback for the private key and the certificate. If
+ <code>
+  metadata.sign.privatekey
+ </code>
+ and
+ <code>
+  metadata.sign.certificate
+ </code>
+ isn't configured, SimpleSAMLphp will use the
+ <code>
+  privatekey
+ </code>
+ ,
+ <code>
+  privatekey_pass
+ </code>
+ and
+ <code>
+  certificate
+ </code>
+ options in the metadata for the SP/IdP.
 </p>
 <h2 id="session-checking-function">
  Session checking function
@@ -343,79 +363,7 @@ that metadata file.
  Optional session checking function, called on session init and loading, defined with 'session.check_function' in config.php.
 </p>
 <p>
- A simple example that will logout a specific user and also prevent
-them from logging in. The code should be placed in in a file
- <code>
-  src/SimpleSAML/CustomCode.php
- </code>
- in the main repository.
-</p>
-<div class="highlight">
- <pre><span></span><code><span class="x">    'session.check_function' =&gt; ['\SimpleSAML\CustomCode', 'checkSession'],</span>
-</code></pre>
-</div>
-<p>
- In the
- <code>
-  src/SimpleSAML/CustomCode.php
- </code>
- file we check for a specific
- <code>
-  uid
- </code>
- who we know is a bad boy in a known auth source and stop them
-from doing anything.
-</p>
-<div class="highlight">
- <pre><span></span><code><span class="x">declare(strict_types=1);</span>
-
-<span class="x">namespace SimpleSAML;</span>
-
-<span class="x">class CustomCode</span>
-<span class="x">{</span>
-<span class="x">    /**</span>
-<span class="x">     * The session.check_function can be used to throw away a session object</span>
-<span class="x">     * during normal processing. If we throw it away by returning `false` then</span>
-<span class="x">     * the user will be forced to create a new session.</span>
-<span class="x">     * </span>
-<span class="x">     * There are two call modes: during session init which can not fail and </span>
-<span class="x">     * during testing. When testing returning false will cause the session to </span>
-<span class="x">     * be discarded.</span>
-<span class="x">     *</span>
-<span class="x">     * @param \SimpleSAML\Session $session The session to approve/reject</span>
-<span class="x">     * @param bool $init true if called during session init.</span>
-<span class="x">     */</span>
-<span class="x">    public static function checkSession(\SimpleSAML\Session $session, bool $init = false)</span>
-<span class="x">    {</span>
-<span class="x">        $authority = "default-sp";</span>
-
-<span class="x">        if( $init ) {</span>
-<span class="x">            // init can not fail</span>
-<span class="x">            // return value is ignored</span>
-<span class="x">            return true;</span>
-<span class="x">        }</span>
-
-<span class="x">        $ad = $session-&gt;getAuthData($authority,"Attributes");</span>
-<span class="x">        if( !$ad ) {</span>
-<span class="x">            return true;</span>
-<span class="x">        }</span>
-<span class="x">        $uid = $ad["uid"];</span>
-
-<span class="x">        if( in_array("badboy@localhost.localdomain",$uid)) {</span>
-<span class="x">            // drop the session</span>
-<span class="x">            return false;</span>
-<span class="x">        }</span>
-
-<span class="x">        // normal functionality</span>
-<span class="x">        return true;</span>
-<span class="x">    }</span>
-<span class="x">};</span>
-</code></pre>
-</div>
-<p>
- A more complex example which performs a GeoIP country check on the
-session to make sure the user is in the same country as they were when
-they authenticated.
+ Example code for the function with GeoIP country check:
 </p>
 <div class="highlight">
  <pre><span></span><code><span class="x">public static function checkSession(\SimpleSAML\Session $session, bool $init = false)</span>

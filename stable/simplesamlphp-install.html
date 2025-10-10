@@ -51,18 +51,23 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
-     <a href="/docs/2.4/index.html">
-      2.4 (stable)
-     </a>
-    </div>
-    <div class="menuitem">
      <a href="/docs/2.3/index.html">
-      2.3
+      2.3 (stable)
      </a>
     </div>
     <div class="menuitem">
      <a href="/docs/2.2/index.html">
       2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
      </a>
     </div>
     <div class="menuitem first">
@@ -748,15 +753,9 @@ look like this:
 </div>
 <ul>
  <li>
-  <p>
-   Set a secret salt and assets.salt.
-  These should be random strings. Some parts of the SimpleSAMLphp needs this salt to generate
+  Set a secret salt. This should be a random string. Some parts of the SimpleSAMLphp needs this salt to generate
   cryptographically secure hashes. SimpleSAMLphp will give an error if the salt is not changed from the default value.
   The command below can help you to generated a random string on (some) unix systems:
-  </p>
-  <p>
-   The assets.salt is separate to the main secretsalt because assets.salt is used on many assets with known values.
-  </p>
  </li>
 </ul>
 <div class="highlight">

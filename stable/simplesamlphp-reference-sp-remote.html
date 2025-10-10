@@ -51,18 +51,23 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
-     <a href="/docs/2.4/index.html">
-      2.4 (stable)
-     </a>
-    </div>
-    <div class="menuitem">
      <a href="/docs/2.3/index.html">
-      2.3
+      2.3 (stable)
      </a>
     </div>
     <div class="menuitem">
      <a href="/docs/2.2/index.html">
       2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
      </a>
     </div>
     <div class="menuitem first">
@@ -886,9 +891,21 @@
  Encrypting assertions
 </h2>
 <p>
- It is possible to encrypt the assertions sent to a SP. There are two modes of encryption
-supported by SimpleSAMLphp. One is symmetric encryption, in which case both the SP and
-the IdP needs to share a key. The other mode is the use of public key encryption. In
+ It is possible to encrypt the assertions sent to a SP. Currently the
+only algorithm supported is
+ <code>
+  AES128_CBC
+ </code>
+ or
+ <code>
+  RIJNDAEL_128
+ </code>
+ .
+</p>
+<p>
+ There are two modes of encryption supported by SimpleSAMLphp. One is
+symmetric encryption, in which case both the SP and the IdP needs to
+share a key. The other mode is the use of public key encryption. In
 that mode, the public key of the SP is extracted from the certificate
 of the SP.
 </p>

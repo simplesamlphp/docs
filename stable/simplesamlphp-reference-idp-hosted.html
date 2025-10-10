@@ -51,18 +51,23 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
-     <a href="/docs/2.4/index.html">
-      2.4 (stable)
-     </a>
-    </div>
-    <div class="menuitem">
      <a href="/docs/2.3/index.html">
-      2.3
+      2.3 (stable)
      </a>
     </div>
     <div class="menuitem">
      <a href="/docs/2.2/index.html">
       2.2
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.1/index.html">
+      2.1
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.0/index.html">
+      2.0
      </a>
     </div>
     <div class="menuitem first">
@@ -188,18 +193,6 @@ have the host
  </code>
  . This entry will be used when no other
 entry matches.
-</p>
-<p>
- Directives that relate to signing of metadata start with the
- <code>
-  metadata.sign
- </code>
- prefix. The signing directives are documented in their
- <a href="simplesamlphp-advancedfeatures.html#metadata-signing#metadata-signing">
-  own section
- </a>
- .
-in the advanced features page.
 </p>
 <h2 id="common-options">
  Common options
@@ -421,26 +414,10 @@ in the advanced features page.
   <code>
    FALSE
   </code>
-  . When set to
-  <code>
-   TRUE
-  </code>
-  encryption will be enforced for all
-  remote SP's and an exception is thrown if encryption fails.
+  .
  </dd>
  <dd>
   Note that this option can be set for each SP in the SP-remote metadata.
- </dd>
- <dd>
-  Note that enforcement can be disabled by setting
-  <code>
-   encryption.optional
-  </code>
-  to
-  <code>
-   TRUE
-  </code>
-  .
  </dd>
  <dt>
   <code>
@@ -572,19 +549,6 @@ in the advanced features page.
   any value in the SP-remote metadata overrides the one configured
   in the IdP metadata.
   </p>
- </dd>
- <dt>
-  <code>
-   encryption.optional
-  </code>
- </dt>
- <dd>
-  Whether or not we may continue to send an unencrypted assertion if the SP has no encryption certificate.
-  The default value is
-  <code>
-   FALSE
-  </code>
-  .
  </dd>
  <dt>
   <code>
