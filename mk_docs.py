@@ -29,7 +29,7 @@ def md2html(md_file, html_file, file_name):
          if not a['href'].startswith(('http://', 'https://', '#')):
            parts = a['href'].split('#')
            if not parts[0].endswith(('html')):
-             a['href'] = parts[0]+".html"
+             a['href'] = parts[0] + ".html"
 
            if (len(parts) > 1):
              a['href'] = a['href'] + '#' + parts[1]
