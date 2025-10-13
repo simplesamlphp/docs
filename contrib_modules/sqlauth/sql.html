@@ -176,7 +176,7 @@ provided at the end of this document.
  <code>
   :password
  </code>
- are available and should be evaluated by the query for authenticaion purposes. If the username/password is incorrect, the "authentication query" should return no rows. The rows returned represent attributes to be returned.
+ are available and should be evaluated by the query for authentication purposes. If the username/password is incorrect, the "authentication query" should return no rows. The rows returned represent attributes to be returned.
 </p>
 <p>
  Taking this example schema:
@@ -439,6 +439,81 @@ provided at the end of this document.
 <span class="w">    </span><span class="p">)</span>
 </code></pre>
 </div>
+<h2 id="connecting-with-unix-domain-sockets-local-sockets">
+ Connecting with UNIX Domain Sockets (Local Sockets)
+</h2>
+<p>
+ When on a UNIX-like platform (Linux, *BSD, etc), and when your SQL database server is running on the same host as the web server
+hosting SimpleSAMLphp, it is possible to use UNIX domain sockets instead of TCP sockets for the database connection. This
+configuration should result in marginally better performance and security (when configured correctly).
+</p>
+<p>
+ Here is an example using PostgreSQL:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">    'example-unix-socket-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL',</span>
+<span class="x">        'dsn' =&gt; 'pgsql:host=/var/run/postgresql;dbname=simplesaml',</span>
+<span class="x">        'username' =&gt; 'www-data',</span>
+<span class="x">        'password' =&gt; 'this-is-ignored',</span>
+<span class="x">        'query' =&gt; 'SELECT uid, givenName, email, eduPersonPrincipalName FROM users WHERE uid = :username ' .</span>
+<span class="x">            'AND password = SHA2(CONCAT((SELECT salt FROM users WHERE uid = :username), :password), 256);',</span>
+<span class="x">    ],</span>
+</code></pre>
+</div>
+<p>
+ Configuration is largely the same as TCP sockets (documented above), with the differences being:
+</p>
+<dl>
+ <dt>
+  <code>
+   dsn
+  </code>
+ </dt>
+ <dd>
+  The key difference is that the
+  <code>
+   host
+  </code>
+  parameter. This needs to be the
+  <strong>
+   directory
+  </strong>
+  that contains the socket file used to connect to the PostgreSQL server. For example, actual socket file might be
+  <code>
+   /var/run/postgresql/.s.PGSQL.5432
+  </code>
+  , so
+  <code>
+   host=/var/run/postgresql
+  </code>
+  is the parameter that you need. If you're struggling to find where the socket is, the
+  <code>
+   unix_socket_directories
+  </code>
+  parameter in the server
+  <code>
+   postgresql.conf
+  </code>
+  is where that location is configured.
+ </dd>
+ <dt>
+  <code>
+   username
+  </code>
+ </dt>
+ <dd>
+  The UNIX username of the user running SimpleSAMLphp (ie. the web server user or the php-fpm user, depending on your setup).
+ </dd>
+ <dt>
+  <code>
+   password
+  </code>
+ </dt>
+ <dd>
+  Required, but the value you specify is ignored (so you can put any placeholder string value in there). All authentication for UNIX domain sockets are done by the operating system kernel.
+ </dd>
+</dl>
 <h2 id="security-considerations">
  Security considerations
 </h2>
