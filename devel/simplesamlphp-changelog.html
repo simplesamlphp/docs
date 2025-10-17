@@ -94,6 +94,11 @@
    </a>
    <ul>
     <li>
+     <a href="#version-250">
+      Version 2.5.0
+     </a>
+    </li>
+    <li>
      <a href="#version-243">
       Version 2.4.3
      </a>
@@ -245,6 +250,22 @@ See the
  </a>
  for specific information about upgrading.
 </p>
+<h2 id="version-250">
+ Version 2.5.0
+</h2>
+<p>
+ Released TBD - November 2025 - as soon as Symfony 7.4 is released
+</p>
+<p>
+ <code>
+  authorize
+ </code>
+</p>
+<ul>
+ <li>
+  Add entityID based filtering (simplesamlphp/simplesamlphp-module-authorize#30) (v1.7.0)
+ </li>
+</ul>
 <h2 id="version-243">
  Version 2.4.3
 </h2>
@@ -285,11 +306,21 @@ See the
   If session.check_function is set and can not be called an error is raised (#2498)
  </li>
 </ul>
+<p>
+ <code>
+  authorize
+ </code>
+</p>
+<ul>
+ <li>
+  Remove reauthentication-button when reauthentication is disabled (simplesamlphp/simplesamlphp-module-authorize#24) (v1.6.2)
+ </li>
+</ul>
 <h2 id="version-242">
  Version 2.4.2
 </h2>
 <p>
- Released TBD
+ Released 2025-06-04
 </p>
 <ul>
  <li>
@@ -298,6 +329,10 @@ See the
  <li>
   Fixed a backwards incompatibility that would throw an exception on an invalid entityID.
   The exception was downgraded to a warning in the log (#2448)
+ </li>
+ <li>
+  Fixed a security-issue where cron-jobs could be executed using the default key,
+  even if a different one was set (#2453)
  </li>
 </ul>
 <p>
@@ -338,8 +373,141 @@ See the
  Version 2.4.0
 </h2>
 <p>
- Released TBD
+ Released 2025-04-16
 </p>
+<ul>
+ <li>
+  Added a new feature flag
+  <code>
+   encryption.optional
+  </code>
+  to allow unencrypted assertions if the SP does
+  not provide an encryption certificate (#2208)
+ </li>
+ <li>
+  Make translations tool theme-aware (#2315)
+ </li>
+ <li>
+  Fix deprecation of Twig spaceless-filter (#2229)
+ </li>
+ <li>
+  Add possibility to provide connection context to XML storage-handler (#2332)
+ </li>
+ <li>
+  Throw user-friendly exception with the proper HTTP statuscode for incorrect HTTP-method (#2234)
+ </li>
+ <li>
+  Fixed build-workflow to only re-build the website once
+ </li>
+ <li>
+  Bugfix: Use entityID from state to allow overriding the issuer (#2345)
+ </li>
+ <li>
+  When only a single IdP is in scope, skip discovery screen (#2355)
+ </li>
+ <li>
+  Downgrade simplesamlphp/composer-module-installer to 1.3.x to keep things working with older (OS-supplied)
+  versions of composer
+ </li>
+ <li>
+  Skip test if xdebug.mode does not contain develop (#2419)
+ </li>
+ <li>
+  Add a console-script to clear cache (#2410)
+ </li>
+ <li>
+  PHP 8.4 Deprecation fixes (#2413)
+ </li>
+ <li>
+  Warn if a module has an unexpected translation-domain in its po file.
+ </li>
+ <li>
+  Add configuration that enables/disables twig template debug mode (#2406)
+ </li>
+ <li>
+  Add support for IDP Discovery protocol (#2402)
+ </li>
+ <li>
+  Destroy session cookies on logout (#2278)
+ </li>
+ <li>
+  A new module to allow debugging SP logins (#2381)
+ </li>
+ <li>
+  When only a single IdP is in scope, skip discovery screen (#2355)
+ </li>
+ <li>
+  Add authproc-filter to manipulate the Assertion's Issuer (#2346)
+ </li>
+ <li>
+  Many improvements to docs and translations
+ </li>
+ <li>
+  Updated dependencies
+ </li>
+</ul>
+<p>
+ <code>
+  adfs
+ </code>
+</p>
+<ul>
+ <li>
+  The ADFS-module has been disconnected from the SSP release. To continue to use it, the module has to be manually installed.
+ </li>
+ <li>
+  The ADFS-module was completely rewritten and now uses our own XML-libraries for building, signing and encrypting XML (v3.0.0)
+ </li>
+</ul>
+<p>
+ <code>
+  discopower
+ </code>
+</p>
+<ul>
+ <li>
+  Create discopower.po for italian locale (#22)
+ </li>
+ <li>
+  Hide tab list when there's only one tab
+ </li>
+ <li>
+  Fix for tags containing uppercase letters
+ </li>
+ <li>
+  Updated jQuery
+ </li>
+</ul>
+<p>
+ <code>
+  ldap
+ </code>
+</p>
+<ul>
+ <li>
+  Add SASL-support (v2.4.0). Note that this required a newer version of symfony/ldap than the one packaged (v2.4.3)
+ </li>
+</ul>
+<p>
+ <code>
+  metarefresh
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed parsing of large metadata files (v1.2.4)
+ </li>
+</ul>
+<p>
+ <code>
+  saml
+ </code>
+</p>
+<ul>
+ <li>
+  Stricter regexp to verify SubjectID/PairwiseID: disallow trailing spaces.
+ </li>
+</ul>
 <h2 id="version-237">
  Version 2.3.7
 </h2>
@@ -1071,12 +1239,15 @@ to an incorrect error message.
  Version 2.1.0
 </h2>
 <p>
- Released 2023-07-31
+ Released 2023-10-30
 </p>
 <ul>
  <li>
   Functionality that before was provided by the sanitycheck-module is now implicit.
   The module has been archived and should no longer be used. (#1843)
+ </li>
+ <li>
+  Add support for conditional authproc-filters (#1836)
  </li>
  <li>
   Add support for TLS configuration for Redis Store (#1828)
@@ -1098,7 +1269,27 @@ to an incorrect error message.
   <code>
    composer/composer
   </code>
-  was dropped in favour of a packaged phar-file.
+  was dropped in favour of a packaged phar-file (#1857)
+ </li>
+ <li>
+  The
+  <code>
+   bin/pwgen.php
+  </code>
+  script was improved to used stronger encryption (#1849)
+ </li>
+ <li>
+  Fixed a missing Accept-header for metadata queries (#1865)
+ </li>
+ <li>
+  Changed the UNIQUE constraint for the SP LogoutStore database to PRIMARY KEY to
+  prevent confusing warnings in Drupal (#1862)
+ </li>
+ <li>
+  Add Accept HTTP headers to MDQ queries (#1865)
+ </li>
+ <li>
+  The custom error- and exception handlers were moved to their very own classes (#1858)
  </li>
 </ul>
 <h2 id="version-208">
@@ -1186,7 +1377,34 @@ to an incorrect error message.
 <h2 id="version-205">
  Version 2.0.5
 </h2>
+<p>
+ Released 2023-07-31
+</p>
 <ul>
+ <li>
+  Fixed link pointing to legacy endpoint (#1833)
+ </li>
+ <li>
+  Updated German translations (#1814)
+ </li>
+ <li>
+  Do not drop UIInfo from SSP array style metadata (#1808)
+ </li>
+ <li>
+  Fixed incorrect return types
+ </li>
+ <li>
+  Added removeEntry-method to MetadataStorageHandlerPdo (#1823)
+ </li>
+ <li>
+  Fixed SLO with signed response (#1812)
+ </li>
+ <li>
+  Fixed broken MetaDataStorageHandlerSerialize
+ </li>
+ <li>
+  Usernames are now trimmed (#1829)
+ </li>
  <li>
   Never expose the cron-API if secret is not properly configured (#1831)
  </li>
@@ -1194,11 +1412,41 @@ to an incorrect error message.
   Fixed a bug where IdP-initiated SLO using the HTTP-POST binding wasn't properly dealt with
  </li>
 </ul>
+<p>
+ <code>
+  admin
+ </code>
+</p>
+<ul>
+ <li>
+  Updated French translations (#1824)
+ </li>
+</ul>
+<p>
+ <code>
+  cron
+ </code>
+</p>
+<ul>
+ <li>
+  Log a warning if secret is not properly configured (#1831)
+ </li>
+</ul>
+<p>
+ <code>
+  metarefresh
+ </code>
+</p>
+<ul>
+ <li>
+  Added support for PDO storage (v0.11.0)
+ </li>
+</ul>
 <h2 id="version-204">
  Version 2.0.4
 </h2>
 <p>
- Released TBD
+ Released 2023-05-12
 </p>
 <ul>
  <li>
@@ -1226,6 +1474,35 @@ to an incorrect error message.
  </li>
  <li>
   Restored the possibility to use HTTP-Artifact binding on AuthnRequests
+ </li>
+ <li>
+  Removed unused private method MetaDataStorageSource::getDynamicHostedUrl (leftover from entityid generation)
+ </li>
+ <li>
+  Bumped simplesamlphp-assets-base
+ </li>
+</ul>
+<p>
+ <code>
+  ldap
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed loading the options-array from configuration (v2.1.6)
+ </li>
+ <li>
+  Properly escape user-input in ldap filters (v2.1.7)
+ </li>
+</ul>
+<p>
+ <code>
+  saml2
+ </code>
+</p>
+<ul>
+ <li>
+  Fixed a static call to a non-static function that caused a broken artifact binding (v4.6.8)
  </li>
 </ul>
 <h2 id="version-203">
