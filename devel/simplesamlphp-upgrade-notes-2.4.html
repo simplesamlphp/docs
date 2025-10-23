@@ -92,36 +92,25 @@ The following changes are relevant for installers and/or developers.
 </p>
 <ul>
  <li>
-  Where a configuration has multiple hosted IdPs, metadata is now associated with the entityId.
+  <p>
+   Where a configuration has multiple hosted IdPs, metadata is now associated with the entityId.
   This means that endpoints such as SingleSignOnService values will be taken from the
   entityId block in saml20-idp-hosted.php. See (
-  <a href="https://github.com/simplesamlphp/simplesamlphp/pull/2270">
-   https://github.com/simplesamlphp/simplesamlphp/pull/2270
-  </a>
-  ) for details.
+   <a href="https://github.com/simplesamlphp/simplesamlphp/pull/2270">
+    https://github.com/simplesamlphp/simplesamlphp/pull/2270
+   </a>
+   ) for details.
+  </p>
  </li>
-</ul>
-<h2 id="deprecations">
- Deprecations
-</h2>
-<p>
- The following classes were marked
- <code>
-  deprecated
- </code>
- and will be removed in a next major release.
-</p>
-<ul>
  <li>
-  fixme
- </li>
-</ul>
-<h2 id="bc-break">
- BC break
-</h2>
-<ul>
- <li>
-  fixme
+  <p>
+   The
+   <code>
+    statistics
+   </code>
+   module has been removed from the release, because the Charts API it depends on has been discontinued
+  by Google, rendering the module useless.
+  </p>
  </li>
 </ul>
 </main></body>
