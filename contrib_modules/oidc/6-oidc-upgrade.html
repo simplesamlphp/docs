@@ -275,6 +275,9 @@ statements
     (from v6.1) own Trust Marks to dynamically fetch
    </li>
    <li>
+    (from v6.3) Trust Mark Status Endpoint Usage Policy
+   </li>
+   <li>
     signer algorithm
    </li>
    <li>
@@ -409,6 +412,18 @@ menu in the Administration area.
   .
 This is only relevant for new installations, since initially it is necessary
 to copy the template file to the default SSP config dir.
+ </li>
+ <li>
+  (from v6.3) A new option for Trust Mark Status Endpoint Usage Policy has
+been introduced, which can be used to control how the Trust Mark Status
+Endpoint is used when validating Trust Marks. The default value is
+  <code>
+   RequiredIfEndpointProvidedForNonExpiringTrustMarksOnly
+  </code>
+  , which
+means that the Trust Mark Status Endpoint is only used if the
+endpoint is provided by the Trust Mark Issuer, and the Trust
+Mark does not expire.
  </li>
 </ul>
 <p>
