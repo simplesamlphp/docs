@@ -89,22 +89,963 @@
  </code>
 </h1>
 <p>
- These are authentication modules for authenticating a user against a
-SQL database.
+ These are authentication modules for authenticating a user against and retrieving attributes from an SQL database.
 </p>
 <p>
- The SQL module performs password verification in the database itself
-using database functions such as sha512 and storing a salt in the
-database. The PasswordVerify module verifies passwords in php using
-the password_verify() function. The PasswordVerify module was created
-to ask the least of the database either because there is minimal
-support in the database or to allow the same code to work against many
-databases without modification. More information on PasswordVerify is
-provided at the end of this document.
+ The authentication can be done in one of two ways:
 </p>
-<h2 id="options">
- Options
+<ul>
+ <li>
+  Most commonly, as a part of the SQL query itself (ie. using SQL functions to hash a parameterized password and compare that to a value stored in the database).
+ </li>
+ <li>
+  Less commonly, just store the hash in the database, retrieve that then compare that hash using PHP's
+  <code>
+   password_verify()
+  </code>
+  function to authenticate. This is useful in cases where there is minimal support in the database or to allow the same code to work against many databases without modification. The differences in how this is configured are in a section towards the bottom of this file.
+ </li>
+</ul>
+<p>
+ There are two different configuration formats supported ("version 1" and "version 2"). Version 1 is simpler, but is more limited in functionality. Version 2 is more powerful and configurable, but a little more verbose. If you wish to authenticate or gather attributes from more than one SQL database, or need more than one SQL query for authentication then you definitely need Version 2.
+</p>
+<p>
+ The Version 1 configuration support comes in two flavours (but identical configurations):
+</p>
+<ul>
+ <li>
+  <code>
+   sqlauth:SQL
+  </code>
+  uses the legacy Version 1 configuration format and code. Eventually the old code will be phased out, and
+  <code>
+   sqlauth:SQL
+  </code>
+  will become a synonym for
+  <code>
+   sqlauth:SQL1Compat
+  </code>
+  .
+ </li>
+ <li>
+  <code>
+   sqlauth:SQL1Compat
+  </code>
+  uses the legacy Version 1 configuration, but applies it to the Version 2 code.
+ </li>
+</ul>
+<p>
+ If you are starting out we recommend the Version 2 (
+ <code>
+  sqlauth:SQL2
+ </code>
+ ) configuration format.
+</p>
+<p>
+ You enable the module in
+ <code>
+  config/config.php
+ </code>
+ .
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">    'module.enable' =&gt; [</span>
+<span class="x">        [...]</span>
+<span class="x">        'sqlauth' =&gt; true,</span>
+<span class="x">        [...]</span>
+<span class="x">    ],</span>
+</code></pre>
+</div>
+<h2 id="basic-concepts">
+ Basic Concepts
 </h2>
+<p>
+ The basic concepts of how
+ <code>
+  sqlauth
+ </code>
+ works is common between versions 1 and 2.
+</p>
+<dl>
+ <dt>
+  <code>
+   Authentication Query
+  </code>
+ </dt>
+ <dd>
+  An SQL query which takes the parameters
+  <code>
+   :username
+  </code>
+  and
+  <code>
+   :password
+  </code>
+  , which are evaluated by the query for authentication purposes. If the username/password is incorrect, the "authentication query"
+  <strong>
+   must
+  </strong>
+  return no rows. If the "authentication query" returns one or more rows, authentication is deemed to succeed (ie. the username/password were correct). The resulting rows returned represent SAML attributes to be returned. Version 1 supports only one authentication query, whereas Version 2 supports one or more.
+ </dd>
+ <dt>
+  <code>
+   Attribute Query
+  </code>
+ </dt>
+ <dd>
+  Optional SQL queries executed after the authentication queries are executed. The resulting rows returned represent SAML attributes to be returned. If no rows are returned, this is not an error condition - it just doesn't add any extra SAML attributes to be returned.
+ </dd>
+</dl>
+<ul>
+ <li>
+  Authentication queries. If this returns zero rows, authentication fails. If it returns more than one row, authentication is deemed to succeed. the parameters
+  <code>
+   :username
+  </code>
+  and
+  <code>
+   :password
+  </code>
+  are available and should be evaluated by the query for authentication purposes. Each column returned becomes an attribute.The rows returned represent attributes to be returned.
+ </li>
+ <li>
+  Zero or more Attribute queries. All columns returned become attributes. Duplicates are suppressed. Arrays with multiple values come from multiple rows being returned.The rows returned represent attributes to be returned.
+ </li>
+</ul>
+<p>
+ As a worked example, consider the following example table useful for authentication:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    uid
+   </th>
+   <th>
+    password
+   </th>
+   <th>
+    salt
+   </th>
+   <th>
+    givenName
+   </th>
+   <th>
+    email
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    bob
+   </td>
+   <td>
+    <strong>
+     <em>
+      *
+     </em>
+    </strong>
+    *
+   </td>
+   <td>
+    ****
+   </td>
+   <td>
+    Bob
+   </td>
+   <td>
+    <a href="mailto/bob@example.com.html">
+     bob@example.com
+    </a>
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ and another table (potentially in a completely separate database) which has attributes we want to return:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    uid
+   </th>
+   <th>
+    groupName
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    bob
+   </td>
+   <td>
+    users
+   </td>
+  </tr>
+  <tr>
+   <td>
+    bob
+   </td>
+   <td>
+    staff
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ An example authentication query might be:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="n">givenName</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">\</span><span class="ss">"givenName\"</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">uid</span><span class="o">=</span><span class="p">:</span><span class="n">username</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">password</span><span class="o">=</span><span class="n">encode</span><span class="p">(</span><span class="n">sha512</span><span class="p">(</span><span class="n">concat</span><span class="p">((</span><span class="k">select</span><span class="w"> </span><span class="n">salt</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">uid</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="p">:</span><span class="n">password</span><span class="p">)::</span><span class="n">bytea</span><span class="p">),</span><span class="w"> </span><span class="s1">'base64'</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>
+ And we could use an attribute query like:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n">groupName</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">usergroups</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">uid</span><span class="o">=</span><span class="p">:</span><span class="n">username</span>
+</code></pre>
+</div>
+<p>
+ Note: Depending upon configuration, attribute queries using the Version 2 configuration format may use
+ <code>
+  :username
+ </code>
+ or
+ <code>
+  :userid
+ </code>
+ . See the Version 2 section below for more details.
+</p>
+<p>
+ In summary:
+</p>
+<ul>
+ <li>
+  If the authentication query returns no rows, that indicates authentication failed.
+ </li>
+ <li>
+  The authentication query is passed
+  <code>
+   :username
+  </code>
+  and
+  <code>
+   :password
+  </code>
+  query parameters to do authentication.
+ </li>
+ <li>
+  If more than one query is desirable or required to get all of the attributes, you can use attribute queries to capture those. In this case, the result set of the attribute queries in that array provide attributes only - only the authentication query is used to determine if the username/password is correct or not, and as such
+  <code>
+   :password
+  </code>
+  is not passed to attribute queries.
+ </li>
+ <li>
+  Because attribute queries have no role in authentication, these queries are allowed to return no rows, simply indicating that query should have no effect on the final returned attribute set.
+ </li>
+ <li>
+  If any query returns multiple rows, they will be merged into the attributes.
+ </li>
+ <li>
+  The column names are used for the attribute names. Some databases will lowercase all column names unless you specify a seemingly unneeded "as" clause (eg.
+  <code>
+   select givenName as \"givenName\"
+  </code>
+  ). SAML is case sensitive in attribute names, so this matters.
+ </li>
+ <li>
+  If multiple queries return the same column names, they will also be merged into the same attributes.
+ </li>
+ <li>
+  Duplicate values and NULL values will be removed.
+ </li>
+</ul>
+<h2 id="version-2-configuration-format">
+ Version 2 Configuration Format
+</h2>
+<p>
+ The Version 2 configuration format supports:
+</p>
+<ul>
+ <li>
+  One or more database connections.
+ </li>
+ <li>
+  One or more authentication queries using any database defined in the
+  <code>
+   databases
+  </code>
+  section.
+ </li>
+ <li>
+  Zero or more attribute queries. Each query can use any database defined in the database section, and can be restricted to apply only to one or more authentication queries.
+ </li>
+</ul>
+<p>
+ All configuration for this module is done in
+ <code>
+  authsources.php
+ </code>
+ . A trivial example with a single database, only a single authentication query and no extra attribute queries:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL2',</span>
+
+<span class="x">        'databases' =&gt; [</span>
+<span class="x">            'idp' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=simplesaml',</span>
+<span class="x">                'username' =&gt; 'simplesaml',</span>
+<span class="x">                'password' =&gt; 'secretpassword',</span>
+<span class="x">            ],</span>
+<span class="x">        ]</span>
+
+<span class="x">        'auth_queries' =&gt; [</span>
+<span class="x">            'auth_username' =&gt; [</span>
+<span class="x">                'database' =&gt; 'idp',</span>
+<span class="x">                'query' =&gt; "select uid, givenName as \"givenName\", email from users where uid=:username and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')",</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<p>
+ Assuming the correct
+ <code>
+  :username
+ </code>
+ and
+ <code>
+  :password
+ </code>
+ are passed, the resulting SAML attributes returned by this configuration would be:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ bob ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Bob ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ bob@example.com ]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ It's really easy to add extra attributes by adding one or more attribute queries:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL2',</span>
+
+<span class="x">        'databases' =&gt; [</span>
+<span class="x">            'idp' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=simplesaml',</span>
+<span class="x">                'username' =&gt; 'simplesaml',</span>
+<span class="x">                'password' =&gt; 'secretpassword',</span>
+<span class="x">            ],</span>
+<span class="x">        ]</span>
+
+<span class="x">        'auth_queries' =&gt; [</span>
+<span class="x">            'auth_username' =&gt; [</span>
+<span class="x">                'database' =&gt; 'idp',</span>
+<span class="x">                'query' =&gt; "select uid, givenName as \"givenName\", email from users where uid=:username and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')"</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+
+<span class="x">        'attr_queries' =&gt; [</span>
+<span class="x">            [</span>
+<span class="x">                'database' =&gt; 'idp',</span>
+<span class="x">                'query' =&gt; "select groupName from usergroups where uid=:username",</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<p>
+ Assuming the correct
+ <code>
+  :username
+ </code>
+ and
+ <code>
+  :password
+ </code>
+ are passed, the resulting SAML attributes returned by this configuration would be:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ bob ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Bob ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ bob@example.com ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    groupName
+   </td>
+   <td>
+    [ users, staff ]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ In the below example, we have users in two separate databases and two authentication queries. Authentication queries are run in the order they are configured, and once an authentication query successfully authenticates a user it is deemed to be authenticated using that query, and no further authentication queries are run. In the below case, the username formats are defined (single lower case word for staff, suppliers have a "supp_" prefix), and as a result we can use the optional
+ <code>
+  username_regex
+ </code>
+ parameter to get a slight performance boost out of not running unnecessary queries.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL2',</span>
+
+<span class="x">        'databases' =&gt; [</span>
+<span class="x">            'staff' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=staff',</span>
+<span class="x">                'username' =&gt; 'simplesaml',</span>
+<span class="x">                'password' =&gt; 'secretpassword',</span>
+<span class="x">            ],</span>
+
+<span class="x">            'suppliers' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=suppliers',</span>
+<span class="x">                'username' =&gt; 'anotheruser',</span>
+<span class="x">                'password' =&gt; 'somepassword',</span>
+<span class="x">            ],</span>
+<span class="x">        ]</span>
+
+<span class="x">        'auth_queries' =&gt; [</span>
+<span class="x">            'auth_username' =&gt; [</span>
+<span class="x">                'database' =&gt; 'staff',</span>
+<span class="x">                'query' =&gt; "select uid, givenName as \"givenName\", email from users where uid=:username and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')"</span>
+<span class="x">                'username_regex' =&gt; '/^[a-z]+$/', // Username will only be acceptable if it is a single lower case word</span>
+<span class="x">            ],</span>
+
+<span class="x">            'auth_supplier' =&gt; [</span>
+<span class="x">                'database' =&gt; 'suppliers',</span>
+<span class="x">                'query' =&gt; "select supplierId as \"uid\", supplierName as \"givenName\", email from suppliers where supplierId=:username and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')"</span>
+<span class="x">                'username_regex' =&gt; '/^supp_[a-z]+$/', // Suppliers have a "supp_" prefix</span>
+<span class="x">            ]</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<p>
+ An example staff login with the above configuration might result in SAML attributes like:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ brian ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Brian ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ brian@example.com ]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ The next example shows a case where we have a single database we are authenticating against, but are aggregating attributes from a number of different databases. In such cases it is common that users might login with an email address, however the shared User ID between databases is some other ID. To support this, the
+ <code>
+  extract_userid
+ </code>
+ takes the value from this other ID field in the authentication query and makes it available as
+ <code>
+  :userid
+ </code>
+ in the attribute queries instead of
+ <code>
+  :username
+ </code>
+ .
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        "databases" =&gt; [</span>
+<span class="x">            "authdb" =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=authdb',</span>
+<span class="x">                'username' =&gt; 'someuser',</span>
+<span class="x">                'password' =&gt; 'somepassword',</span>
+<span class="x">            ],</span>
+<span class="x">            "staffdb" =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=staffdb',</span>
+<span class="x">                'username' =&gt; 'anotheruser',</span>
+<span class="x">                'password' =&gt; 'anotherpassword',</span>
+<span class="x">            ],</span>
+<span class="x">            "studentsdb" =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=studentsdb',</span>
+<span class="x">                'username' =&gt; 'differentuser',</span>
+<span class="x">                'password' =&gt; 'differentpassword',</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">        "auth_queries" =&gt; [</span>
+<span class="x">            "auth_query_email" =&gt; [</span>
+<span class="x">                "database" =&gt; "authdb",</span>
+<span class="x">                "query" =&gt;</span>
+<span class="x">                    "select uid, givenName, email "</span>
+<span class="x">                    "from users where email=:username "</span>
+<span class="x">                    "and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')",</span>
+<span class="x">                "username_regex" =&gt; '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',</span>
+<span class="x">                "extract_userid_from" =&gt; 'uid',</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">        "attr_queries" =&gt; [</span>
+<span class="x">            [</span>
+<span class="x">                'database' =&gt; 'staffdb',</span>
+<span class="x">                'query' =&gt; "select department, role from staff where uid=:userid",</span>
+<span class="x">            ],</span>
+<span class="x">            [</span>
+<span class="x">                'database' =&gt; 'studentsdb',</span>
+<span class="x">                'query' =&gt; "select course, year from students where uid=:userid",</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<p>
+ A staff member authenticating might return SAML attributes like:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ 10543 ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Brian ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ brian@example.edu ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    department
+   </td>
+   <td>
+    [ Physics ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    role
+   </td>
+   <td>
+    [ Lecturer ]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ and a student might look like:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ 20625 ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Jane ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ jane@student.example.edu ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    course
+   </td>
+   <td>
+    [ Mathematics ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    year
+   </td>
+   <td>
+    [ 2 ]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ When you've got more than one authentication query, it is possible to restrict attribute queries to only run for certain authentication queries using the
+ <code>
+  only_for_auth
+ </code>
+ attribute query configuration parameter:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$this-&gt;config = [</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        [...]</span>
+<span class="x">        "databases" =&gt; [</span>
+<span class="x">            "staffdb" =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=staffdb',</span>
+<span class="x">                'username' =&gt; 'anotheruser',</span>
+<span class="x">                'password' =&gt; 'anotherpassword',</span>
+<span class="x">            ],</span>
+<span class="x">            "studentsdb" =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=studentsdb',</span>
+<span class="x">                'username' =&gt; 'differentuser',</span>
+<span class="x">                'password' =&gt; 'differentpassword',</span>
+<span class="x">            ],</span>
+<span class="x">            "auth_queries" =&gt; [</span>
+<span class="x">                "auth_query_students" =&gt; [</span>
+<span class="x">                    "database" =&gt; "studentsdb",</span>
+<span class="x">                    "query" =&gt;</span>
+<span class="x">                        "select studentid, givenName, lastName, email, course, year " .</span>
+<span class="x">                        "from students where email=:username "</span>
+<span class="x">                        "and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')",</span>
+<span class="x">                    "username_regex" =&gt; '/^[a-zA-Z0-9._%+-]+@student\.example\.edu$/',</span>
+<span class="x">                    "extract_userid_from" =&gt; 'studentid',</span>
+<span class="x">                ],</span>
+<span class="x">                "auth_query_staff" =&gt; [</span>
+<span class="x">                    "database" =&gt; "staffdb",</span>
+<span class="x">                    "query" =&gt;</span>
+<span class="x">                        "select uid, givenName, lastName, email, department " .</span>
+<span class="x">                        "from staff where email=:username "</span>
+<span class="x">                        "and password=encode(sha512(concat((select salt from users where uid=1), :password)::bytea), 'base64')",</span>
+<span class="x">                    "username_regex" =&gt; '/^[a-zA-Z0-9._%+-]+@example\.edu$/',</span>
+<span class="x">                    "extract_userid_from" =&gt; 'uid',</span>
+<span class="x">                ],</span>
+<span class="x">            ],</span>
+<span class="x">            "attr_queries" =&gt; [</span>
+<span class="x">                [</span>
+<span class="x">                    'database' =&gt; 'staffdb',</span>
+<span class="x">                    'query' =&gt; "select role from staff_roles where uid=:userid",</span>
+<span class="x">                    'only_for_auth' =&gt; ['auth_query_staff' ],</span>
+<span class="x">                ],</span>
+<span class="x">                [</span>
+<span class="x">                    'database' =&gt; 'studentsdb',</span>
+<span class="x">                    'query' =&gt; "select unit_code from units_enrolled where studentid=:userid order by unit_code",</span>
+<span class="x">                    'only_for_auth' =&gt; ['auth_query_students'],</span>
+<span class="x">                ],</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<p>
+ A staff member authenticating might return SAML attributes like:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    uid
+   </td>
+   <td>
+    [ 10543 ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Brian ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    lastName
+   </td>
+   <td>
+    [ Perkins ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ brian@example.edu ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    department
+   </td>
+   <td>
+    [ Physics ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    role
+   </td>
+   <td>
+    [ Lecturer, Tutor]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ and a student might look like:
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Attribute Name
+   </th>
+   <th>
+    Attribute Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    studentid
+   </td>
+   <td>
+    [ 20625 ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    givenName
+   </td>
+   <td>
+    [ Jane ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    lastName
+   </td>
+   <td>
+    [ Smith ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    email
+   </td>
+   <td>
+    [ jane@student.example.edu ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    course
+   </td>
+   <td>
+    [ Mathematics ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    year
+   </td>
+   <td>
+    [ 2 ]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    unit_code
+   </td>
+   <td>
+    [ MATH201, MATH202, MATH203]
+   </td>
+  </tr>
+ </tbody>
+</table>
+<h3 id="configuration-parameter-dictionary-version-2">
+ Configuration Parameter Dictionary (Version 2)
+</h3>
+<p>
+ There are three sections in the configuration, as follows:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$this-&gt;config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        "databases" =&gt; [</span>
+<span class="x">            // One or more databases</span>
+<span class="x">        ],</span>
+<span class="x">        "auth_queries" =&gt; [</span>
+<span class="x">            // One or more Authentication Queries</span>
+<span class="x">        ],</span>
+<span class="x">        "attr_queries" =&gt; [</span>
+<span class="x">            // Zero or more Attribute Queries</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
+</code></pre>
+</div>
+<h4 id="databases">
+ databases
+</h4>
 <dl>
  <dt>
   <code>
@@ -135,13 +1076,38 @@ provided at the end of this document.
  <dd>
   The password which should be used when connecting to the database server.
  </dd>
+</dl>
+<h4 id="auth_queries">
+ auth_queries
+</h4>
+<dl>
+ <dt>
+  <code>
+   database
+  </code>
+ </dt>
+ <dd>
+  ID of the database in the
+  <code>
+   databases
+  </code>
+  configuration (previous section) that this authentication query should run on.
+ </dd>
  <dt>
   <code>
    query
   </code>
  </dt>
  <dd>
-  The SQL query or queries which should be used to authenticate the user and retrieve their attributes.
+  The SQL query which should be used to authenticate the user and retrieve attributes. This query is passed the
+  <code>
+   :username
+  </code>
+  and
+  <code>
+   :password
+  </code>
+  SQL parameters.
  </dd>
  <dt>
   <code>
@@ -153,31 +1119,95 @@ provided at the end of this document.
  </dd>
  <dt>
   <code>
-   passwordhashcolumn
+   extract_userid_from
   </code>
  </dt>
  <dd>
-  (Optional) Only When using the sqlauth:PasswordVerify module. This is the name of the column that contains the hashed password. The default is to look for a column 'passwordhash' in the database.
+  (Optional) If the username from the authentication is not the ID used in the attribute queries. A common example is where they login with their email address (ie.
+  <code>
+   :username
+  </code>
+  is an email address), but their real user ID is in a different column. In that case, specify the column their real user ID is in.
+ </dd>
+ <dt>
+  <code>
+   password_verify_hash_column
+  </code>
+ </dt>
+ <dd>
+  (Optional) See the section at the bottom of this page covering Password Verify support.
  </dd>
 </dl>
-<h2 id="writing-a-query-queries">
- Writing a Query / Queries
+<h4 id="attr_queries">
+ attr_queries
+</h4>
+<dl>
+ <dt>
+  <code>
+   database
+  </code>
+ </dt>
+ <dd>
+  ID of the database in the
+  <code>
+   databases
+  </code>
+  configuration (previous section) that this authentication query should run on.
+ </dd>
+ <dt>
+  <code>
+   query
+  </code>
+ </dt>
+ <dd>
+  The SQL query which should be used to gather attributes with. This query is passed either the
+  <code>
+   :username
+  </code>
+  or
+  <code>
+   :userid
+  </code>
+  parameters - if the
+  <code>
+   extract_userid_from
+  </code>
+  parameter was specified in the authentication query, the
+  <code>
+   :userid
+  </code>
+  SQL parameter will be passed to the query. Otherwise,
+  <code>
+   :username
+  </code>
+  is passed as an SQL parameter.
+ </dd>
+ <dt>
+  <code>
+   only_for_auth
+  </code>
+ </dt>
+ <dd>
+  (Optional) Only run the attribute query if the user authenticated using one of the authentication queries referenced in this list.
+ </dd>
+</dl>
+<h2 id="version-1-configuration-format">
+ Version 1 Configuration Format
 </h2>
 <p>
- A
- <code>
-  query
- </code>
- can be either a single string with an SQL statement, or an array of queries, run in order. That single string (or the first query in the array) is the "authentication query" - the parameters
- <code>
-  :username
- </code>
- and
- <code>
-  :password
- </code>
- are available and should be evaluated by the query for authentication purposes. If the username/password is incorrect, the "authentication query" should return no rows. The rows returned represent attributes to be returned.
+ The Version 1 format is more basic, both in terms of configuration and different use cases it supports. Specifically, it supports:
 </p>
+<ul>
+ <li>
+  One database only
+ </li>
+ <li>
+  One authentication query
+ </li>
+ <li>
+  Zero or more attribute queries
+ </li>
+</ul>
 <p>
  Taking this example schema:
 </p>
@@ -387,8 +1417,74 @@ provided at the end of this document.
   Duplicate values and NULL values will be removed.
  </li>
 </ul>
-<h2 id="further-examples">
- Further Examples
+<h3 id="configuration-parameter-dictionary-version-1">
+ Configuration Parameter Dictionary (Version 1)
+</h3>
+<dl>
+ <dt>
+  <code>
+   dsn
+  </code>
+ </dt>
+ <dd>
+  The DSN which should be used to connect to the database server.
+  Check the various database drivers in the
+  <a href="http://php.net/manual/en/pdo.drivers.php">
+   PHP documentation
+  </a>
+  for a description of the various DSN formats.
+ </dd>
+ <dt>
+  <code>
+   username
+  </code>
+ </dt>
+ <dd>
+  The username which should be used when connecting to the database server.
+ </dd>
+ <dt>
+  <code>
+   password
+  </code>
+ </dt>
+ <dd>
+  The password which should be used when connecting to the database server.
+ </dd>
+ <dt>
+  <code>
+   query
+  </code>
+ </dt>
+ <dd>
+  Either a single string with an SQL statement, or an array of queries, run in order. That single string (or the first query in the array) is the "authentication query" - the parameters
+  <code>
+   :username
+  </code>
+  and
+  <code>
+   :password
+  </code>
+  are available and should be evaluated by the query for authentication purposes. If the username/password is incorrect, the "authentication query" should return no rows. The rows returned represent attributes to be returned.
+ </dd>
+ <dt>
+  <code>
+   username_regex
+  </code>
+ </dt>
+ <dd>
+  (Optional) A regular expression that the username must match. Useful if the type of the username column in the database isn't a string (eg. an integer), or if the format is well known (eg. email address, single word with no spaces, etc) to avoid going to the database for a query that will never result in successful authentication.
+ </dd>
+ <dt>
+  <code>
+   passwordhashcolumn
+  </code>
+ </dt>
+ <dd>
+  (Optional) Only When using the sqlauth:PasswordVerify module. This is the name of the column that contains the hashed password. The default is to look for a column 'passwordhash' in the database. See the section at the bottom of this page covering Password Verify support.
+ </dd>
+</dl>
+<h2 id="further-authentication-query-examples">
+ Further Authentication Query Examples
 </h2>
 <div class="highlight">
  <pre><span></span><code><span class="n">Example</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">SHA256</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">salt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">salt</span><span class="w"> </span><span class="n">stored</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">independent</span><span class="w"> </span><span class="k">column</span><span class="p">,</span><span class="w"> </span><span class="n">MySQL</span><span class="w"> </span><span class="n">server</span><span class="p">:</span>
@@ -448,17 +1544,32 @@ hosting SimpleSAMLphp, it is possible to use UNIX domain sockets instead of TCP 
 configuration should result in marginally better performance and security (when configured correctly).
 </p>
 <p>
- Here is an example using PostgreSQL:
+ Here is an example Version 2 configuration using PostgreSQL:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">    'example-unix-socket-sql' =&gt; [</span>
-<span class="x">        'sqlauth:SQL',</span>
-<span class="x">        'dsn' =&gt; 'pgsql:host=/var/run/postgresql;dbname=simplesaml',</span>
-<span class="x">        'username' =&gt; 'www-data',</span>
-<span class="x">        'password' =&gt; 'this-is-ignored',</span>
-<span class="x">        'query' =&gt; 'SELECT uid, givenName, email, eduPersonPrincipalName FROM users WHERE uid = :username ' .</span>
-<span class="x">            'AND password = SHA2(CONCAT((SELECT salt FROM users WHERE uid = :username), :password), 256);',</span>
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL2',</span>
+
+<span class="x">        'databases' =&gt; [</span>
+<span class="x">            'idp' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=/var/run/postgresql;dbname=simplesaml',</span>
+<span class="x">                'username' =&gt; 'www-data',</span>
+<span class="x">                'password' =&gt; 'this-is-ignored',</span>
+<span class="x">            ],</span>
+<span class="x">        ]</span>
+
+<span class="x">        'auth_queries' =&gt; [</span>
+<span class="x">            'auth_username' =&gt; [</span>
+<span class="x">                'database' =&gt; 'idp',</span>
+<span class="x">                'query' =&gt; 'SELECT uid, givenName, email, eduPersonPrincipalName FROM users WHERE uid = :username ' .</span>
+<span class="x">                    'AND password = SHA2(CONCAT((SELECT salt FROM users WHERE uid = :username), :password), 256);',</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
 <span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
 </code></pre>
 </div>
 <p>
@@ -528,14 +1639,44 @@ used instead as an additional security measure.
 <p>
  One way hashing algorithms like MD5 or SHA1 are considered insecure and should therefore be avoided.
 </p>
-<h2 id="the-passwordverify-module">
- The PasswordVerify module
+<h2 id="password_verify-support">
+ <code>
+  password_verify()
+ </code>
+ support
 </h2>
 <p>
- Users and passwords have to be set in the database by other means than the PasswordVerify module.
+ A common one-way password hashing function is the
+ <a href="https://www.php.net/manual/en/function.crypt.php">
+  crypt
+ </a>
+ function that
+ <code>
+  libc
+ </code>
+ on UNIX has provided natively for decades. PHP provides a useful
+ <a href="https://www.php.net/password_verify">
+  password_verify()
+ </a>
+ function to authenticate a password against a previously stored
+ <code>
+  crypt
+ </code>
+ hash. Hashes can be created in PHP using the
+ <a href="https://www.php.net/password_hash">
+  password_hash()
+ </a>
+ function.
 </p>
 <p>
- For example:
+ In doing this, the authentication query no longer actually does the authentication - it returns the password hash. As a result, the authentication query is no longer passed the
+ <code>
+  :password
+ </code>
+ parameter.
+</p>
+<p>
+ Given the SQL schema:
 </p>
 <div class="highlight">
  <pre><span></span><code><span class="w">    </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
@@ -548,27 +1689,60 @@ used instead as an additional security measure.
 </code></pre>
 </div>
 <p>
- A user can be added with a known password "FIXMEPASSWORD" as shown below.
+ the Version 2 configuration parameter
+ <code>
+  password_verify_hash_column
+ </code>
+ specifies which column has the
+ <code>
+  crypt
+ </code>
+ hash:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">$dsn = "pgsql:host=...";</span>
-<span class="x">$username = "fixme";</span>
-<span class="x">$password = "";</span>
-<span class="x">$options = array();</span>
+ <pre><span></span><code><span class="x">$config = [</span>
+<span class="x">    [...]</span>
+<span class="x">    'example-sql' =&gt; [</span>
+<span class="x">        'sqlauth:SQL2',</span>
 
-<span class="x">$query = "insert into users values ('test@example.com',:passwordhash, 'test', 'test@example.com', 'test@example.com' )";</span>
+<span class="x">        'databases' =&gt; [</span>
+<span class="x">            'idp' =&gt; [</span>
+<span class="x">                'dsn' =&gt; 'pgsql:host=postgresql;port=5432;dbname=simplesaml',</span>
+<span class="x">                'username' =&gt; 'simplesaml',</span>
+<span class="x">                'password' =&gt; 'secretpassword',</span>
+<span class="x">            ],</span>
+<span class="x">        ]</span>
 
-<span class="x">$db = new PDO($dsn, $username, $password, $options);</span>
-<span class="x">$db-&gt;exec("SET NAMES 'UTF8'");</span>
-
-<span class="x">$params = ["passwordhash" =&gt; password_hash("FIXMEPASSWORD", PASSWORD_ARGON2ID ) ];</span>
-<span class="x">$sth = $db-&gt;prepare($query);</span>
-<span class="x">$sth-&gt;execute($params);</span>
+<span class="x">        'auth_queries' =&gt; [</span>
+<span class="x">            'auth_username' =&gt; [</span>
+<span class="x">                'database' =&gt; 'idp',</span>
+<span class="x">                'query' =&gt; "select uid, email, passwordhash, eduPersonPrincipalName from users where uid = :username",</span>
+<span class="x">                'password_verify_hash_column' =&gt; 'passwordhash',</span>
+<span class="x">            ],</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">    [...]</span>
+<span class="x">];</span>
 </code></pre>
 </div>
 <p>
- Since the above is using the default passwordhash column name this can
-then be used with the following addition to authsources.php.
+ The equivalent Version 1 configuration has slight differences, in that
+ <code>
+  PasswordVerify
+ </code>
+ was a separate module in Version 1 (whereas it is supported in them main
+ <code>
+  SQL2
+ </code>
+ Version 2 module), and the
+ <code>
+  passwordhashcolumn
+ </code>
+ parameter specifies the column that has the
+ <code>
+  crypt
+ </code>
+ hash:
 </p>
 <div class="highlight">
  <pre><span></span><code><span class="x">'smalldb-dbauth' =&gt; [</span>
@@ -576,10 +1750,55 @@ then be used with the following addition to authsources.php.
 <span class="x">    'dsn' =&gt; 'pgsql:host=...',</span>
 <span class="x">    'username' =&gt; 'dbuser',</span>
 <span class="x">    'password' =&gt; 'dbpassword',</span>
-<span class="x">    'passwodhashcolumn' =&gt;  'passwordhash',</span>
+<span class="x">    'passwordhashcolumn' =&gt;  'passwordhash',</span>
 <span class="x">    'query' =&gt; 'select uid, email, passwordhash, eduPersonPrincipalName from users where uid = :username ',</span>
 <span class="x">],</span>
 </code></pre>
 </div>
+<p>
+ In both cases, the authentication query must return the column referenced by the
+ <code>
+  password_verify_hash_column
+ </code>
+ (Version 2) or
+ <code>
+  passwordhashcolumn
+ </code>
+ (Version 1).
+ <code>
+  sqlauth
+ </code>
+ will then call
+ <a href="https://www.php.net/password_verify">
+  password_verify()
+ </a>
+ with that hash and the user provided password to determine whether authentication is successful.
+</p>
+<p>
+ If the authentication is successful, all attributes returned by the authentication query are returned as SAML attributes (as per any other authentication query)
+ <strong>
+  except the password hash column
+ </strong>
+ . This is dropped and not exposed as a SAML attribute for security reasons.
+</p>
+<p>
+ Note: An inconsistency between Version 1 and Version 2 configurations is that the Version 1 had
+ <code>
+  passwordhashcolumn
+ </code>
+ being an optional element with a default value of
+ <code>
+  passwordhash
+ </code>
+ . With Version 2,
+ <a href="https://www.php.net/password_verify">
+  password_verify()
+ </a>
+ support is enabled by specifying the optional
+ <code>
+  password_verify_hash_column
+ </code>
+ configuration parameter, hence it does not have a default value.
+</p>
 </main></body>
 </html>
