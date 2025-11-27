@@ -105,7 +105,13 @@
   <code>
    %keep
   </code>
-  can be used to keep the source attribute, otherwise it will be removed.
+  can be used to keep the source attribute, otherwise it will be removed (regardless of whether there is a match or not).
+ </li>
+ <li>
+  <code>
+   %regex
+  </code>
+  can be used to evaluate the values as regular expressions instead of plain strings.
  </li>
 </ul>
 <p>
@@ -255,6 +261,62 @@ The
           ],
       ],
   ],
+</code></pre>
+</div>
+<h2 id="regular-expressions">
+ Regular expressions
+</h2>
+<p>
+ Will add eduPersonAffiliation containing value
+ <code>
+  student
+ </code>
+ if the
+ <code>
+  memberOf
+ </code>
+ attribute contains
+some value matching
+ <code>
+  /^cn=student,o=[a-z]+,o=organization,dc=org
+ </code>
+ (eg.
+ <code>
+  cn=student,o=some,o=organization,dc=org
+ </code>
+ ).
+The
+ <code>
+  memberOf
+ </code>
+ attribute will be removed (use
+ <code>
+  %keep
+ </code>
+ , to keep it) and existing values in
+ <code>
+  eduPersonAffiliation
+ </code>
+ will be merged (use
+ <code>
+  %replace
+ </code>
+ to replace them).
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="p">'</span><span class="n">authproc</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="mh">50</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">'</span><span class="n">class</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">'</span><span class="nl">core:</span><span class="n">AttributeValueMap</span><span class="p">',</span>
+<span class="w">          </span><span class="p">'</span><span class="n">sourceattribute</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">'</span><span class="n">memberOf</span><span class="p">',</span>
+<span class="w">          </span><span class="p">'</span><span class="n">targetattribute</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">'</span><span class="n">eduPersonAffiliation</span><span class="p">',</span>
+<span class="w">          </span><span class="p">'</span><span class="o">%</span><span class="n">regex</span><span class="p">',</span>
+<span class="w">          </span><span class="p">'</span><span class="n">values</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="p">'</span><span class="n">student</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="p">'</span><span class="o">/^</span><span class="n">cn</span><span class="o">=</span><span class="n">student</span><span class="p">,</span><span class="n">o</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="n">z</span><span class="p">]</span><span class="o">+</span><span class="p">,</span><span class="n">o</span><span class="o">=</span><span class="n">organization</span><span class="p">,</span><span class="n">dc</span><span class="o">=</span><span class="n">org</span><span class="err">$</span><span class="o">/</span><span class="p">',</span>
+<span class="w">              </span><span class="p">],</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">  </span><span class="p">],</span>
 </code></pre>
 </div>
 </main></body>
