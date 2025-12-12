@@ -125,7 +125,7 @@ in your checkout are reflected live in the container.
 <span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/oidc_module.crt"</span>,target<span class="o">=</span>/var/simplesamlphp/cert/oidc_module.crt,readonly<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/ssp/oidc_module.key"</span>,target<span class="o">=</span>/var/simplesamlphp/cert/oidc_module.key,readonly<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docker/apache-override.cf"</span>,target<span class="o">=</span>/etc/apache2/sites-enabled/ssp-override.cf,readonly<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">443</span>:443<span class="w"> </span>cirrusid/simplesamlphp:v2.3.5
+<span class="w">  </span>-p<span class="w"> </span><span class="m">443</span>:443<span class="w"> </span>cirrusid/simplesamlphp:v2.4.4
 </code></pre>
 </div>
 <p>
