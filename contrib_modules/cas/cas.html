@@ -94,7 +94,7 @@ the only difference is this is authentication module and not a script.
  Setting up the CAS authentication module
 </h2>
 <p>
- Adding a authentication source
+ Adding an authentication source
 </p>
 <p>
  Example authsource.php:
@@ -123,7 +123,7 @@ the only difference is this is authentication module and not a script.
  Querying Attributes
 </h2>
 <p>
- CAS V3 (since 2017) supports querying attributes. Those have to be published
+ CAS v3 (since 2017) supports querying attributes. Those have to be published
 for the service you're calling. Here the service publishes
  <code>
   sn
@@ -164,6 +164,41 @@ for the service you're calling. Here the service publishes
 <span class="x">]</span>
 </code></pre>
 </div>
+<h3 id="optional-enabling-slate-extensions">
+ Optional: Enabling Slate extensions
+</h3>
+<p>
+ Some deployments include vendor‑specific fields (for example
+ <code>
+  slate:*
+ </code>
+ ) in CAS responses.
+You can opt in to Slate support:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">'cas' =&gt; [</span>
+<span class="x">    // ...</span>
+<span class="x">    'serviceValidate' =&gt; 'https://cas.example.com/p3/serviceValidate',</span>
+<span class="x">    // Enable Slate support (optional)</span>
+<span class="x">    'slate.enabled' =&gt; true,</span>
+
+<span class="x">    // Optional XPath-based attribute mappings</span>
+<span class="x">    'attributes' =&gt; [</span>
+<span class="x">        // Standard CAS attributes</span>
+<span class="x">        'uid'       =&gt; 'cas:user',</span>
+<span class="x">        'mail'      =&gt; 'cas:attributes/cas:mail',</span>
+
+<span class="x">        // Slate namespaced attributes inside cas:attributes</span>
+<span class="x">        'slate_person' =&gt; 'cas:attributes/slate:person',</span>
+<span class="x">        'slate_round'  =&gt; 'cas:attributes/slate:round',</span>
+<span class="x">        'slate_ref'    =&gt; 'cas:attributes/slate:ref',</span>
+
+<span class="x">        // Some deployments also place vendor elements at the top level</span>
+<span class="x">        'slate_person_top' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/slate:person',</span>
+<span class="x">    ],</span>
+<span class="x">],</span>
+</code></pre>
+</div>
 <p>
  which would return something like
 </p>
@@ -195,10 +230,10 @@ for each value:
 <div class="highlight">
  <pre><span></span><code><span class="x">'cas' =&gt; [</span>
 <span class="x">    'attributes' =&gt; [</span>
-<span class="x">        'uid' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/cas:user',</span>
-<span class="x">        'sn' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:sn',</span>
-<span class="x">        'givenName' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:firstname',</span>
-<span class="x">        'mail' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:mail',</span>
+<span class="x">        'uid' =&gt; 'cas:user',</span>
+<span class="x">        'sn' =&gt; 'cas:attributes/cas:sn',</span>
+<span class="x">        'givenName' =&gt; 'cas:attributes/cas:firstname',</span>
+<span class="x">        'mail' =&gt; 'cas:attributes/cas:mail',</span>
 <span class="x">    ],</span>
 <span class="x">],</span>
 </code></pre>
@@ -207,7 +242,7 @@ for each value:
  and even some custom attributes if they're set:
 </p>
 <div class="highlight">
- <pre><span></span><code><span class="x">'customabc' =&gt; '/cas:serviceResponse/cas:authenticationSuccess/custom:abc',</span>
+ <pre><span></span><code><span class="x">'customabc' =&gt; 'custom:abc',</span>
 </code></pre>
 </div>
 <p>
@@ -216,7 +251,7 @@ set
  <code>
   ldap
  </code>
- to a
+ to
  <code>
   null
  </code>
