@@ -107,35 +107,25 @@
  </li>
 </ul>
 <p>
- There are two different configuration formats supported ("version 1" and "version 2"). Version 1 is simpler, but is more limited in functionality. Version 2 is more powerful and configurable, but a little more verbose. If you wish to authenticate or gather attributes from more than one SQL database, or need more than one SQL query for authentication then you definitely need Version 2.
+ There are two different configuration formats ("Version 1" and "Version 2"). We highly recommend using the more powerful and configurable Version 2 configuration. Version 1 is now considered deprecated and support for this legacy configuration format will be removed in a future release.
 </p>
 <p>
- The Version 1 configuration support comes in two flavours (but identical configurations):
+ If you are starting out you should use the Version 2 (
+ <code>
+  sqlauth:SQL2
+ </code>
+ ) configuration format.
 </p>
-<ul>
- <li>
-  <code>
-   sqlauth:SQL
-  </code>
-  uses the legacy Version 1 configuration format and code. Eventually the old code will be phased out, and
-  <code>
-   sqlauth:SQL
-  </code>
-  will become a synonym for
-  <code>
-   sqlauth:SQL1Compat
-  </code>
-  .
- </li>
- <li>
-  <code>
-   sqlauth:SQL1Compat
-  </code>
-  uses the legacy Version 1 configuration, but applies it to the Version 2 code.
- </li>
-</ul>
 <p>
- If you are starting out we recommend the Version 2 (
+ If you have existing Version 1 (
+ <code>
+  sqlauth:SQL
+ </code>
+ or
+ <code>
+  sqlauth:SQL1Compat
+ </code>
+ ) configuration, you should migrate to the new Version 2 (
  <code>
   sqlauth:SQL2
  </code>
