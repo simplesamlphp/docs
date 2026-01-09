@@ -87,14 +87,17 @@
  Using the CAS authentication source with SimpleSAMLphp
 </h1>
 <p>
- This is completely based on the original cas authentication,
-the only difference is this is authentication module and not a script.
+ This is completely based on the original CAS authentication;
+the only difference is this is an authentication module, not a script.
 </p>
 <h2 id="setting-up-the-cas-authentication-module">
  Setting up the CAS authentication module
 </h2>
-<p>
+<h3 id="adding-an-authentication-source">
  Adding an authentication source
+</h3>
+<p>
+ In new deployments using ldap v2.5+, configure LDAP as a separate authsource in the ldap module and reference it by id from CAS.
 </p>
 <p>
  Example authsource.php:
@@ -103,18 +106,71 @@ the only difference is this is authentication module and not a script.
  <pre><span></span><code><span class="x">'example-cas' =&gt; [</span>
 <span class="x">    'cas:CAS',</span>
 <span class="x">    'cas' =&gt; [</span>
-<span class="x">        'login' =&gt; 'https://cas.example.com/login',</span>
-<span class="x">        'validate' =&gt; 'https://cas.example.com/validate',</span>
-<span class="x">        'logout' =&gt; 'https://cas.example.com/logout'</span>
+<span class="x">        'login'    =&gt; 'https://cas.example.com/login',</span>
+<span class="x">        'validate' =&gt; 'https://cas.example.com/validate', // CAS v2</span>
+<span class="x">        'logout'   =&gt; 'https://cas.example.com/logout',</span>
 <span class="x">    ],</span>
 <span class="x">    'ldap' =&gt; [</span>
-<span class="x">        'servers' =&gt; 'ldaps://ldaps.example.be:636/',</span>
-<span class="x">        'enable_tls' =&gt; true,</span>
-<span class="x">        'searchbase' =&gt; 'ou=people,dc=org,dc=com',</span>
-<span class="x">        'searchattributes' =&gt; 'uid',</span>
-<span class="x">        'attributes' =&gt; ['uid','cn'],</span>
-<span class="x">        'priv_user_dn' =&gt; 'cn=simplesamlphp,ou=applications,dc=org,dc=com',</span>
-<span class="x">        'priv_user_pw' =&gt; 'password',</span>
+<span class="x">        'authsource' =&gt; 'ldap-backend',</span>
+<span class="x">    ],</span>
+<span class="x">],</span>
+
+<span class="x">// LDAP authsource (dnpattern mode)</span>
+<span class="x">'ldap-backend' =&gt; [</span>
+<span class="x">    'ldap:Ldap',</span>
+
+<span class="x">    // REQUIRED in v2.5: one or more LDAP URLs</span>
+<span class="x">    'connection_string' =&gt; 'ldaps://ldap.example.com',</span>
+
+<span class="x">    // Optional extras</span>
+<span class="x">    'encryption' =&gt; 'ssl',</span>
+<span class="x">    'version'    =&gt; 3,</span>
+<span class="x">    'options'    =&gt; [</span>
+<span class="x">        'network_timeout' =&gt; 3,</span>
+<span class="x">        'referrals'       =&gt; false,</span>
+<span class="x">    ],</span>
+
+<span class="x">    // Dnpattern mode (no search)</span>
+<span class="x">    'dnpattern'     =&gt; 'uid=%username%,cn=people,dc=example,dc=com',</span>
+<span class="x">    'search.enable' =&gt; false,</span>
+
+<span class="x">    // 'attributes' =&gt; ['uid', 'cn', 'mail'],</span>
+<span class="x">]</span>
+</code></pre>
+</div>
+<p>
+ OR:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">'example-cas' =&gt; [</span>
+<span class="x">    'cas:CAS',</span>
+<span class="x">    'cas' =&gt; [</span>
+<span class="x">        'login'    =&gt; 'https://cas.example.com/login',</span>
+<span class="x">        'serviceValidate' =&gt; 'https://cas.example.com/serviceValidate', // CAS v3</span>
+<span class="x">        'logout'   =&gt; 'https://cas.example.com/logout',</span>
+<span class="x">    ],</span>
+<span class="x">    'ldap' =&gt; [</span>
+<span class="x">        'authsource' =&gt; 'ldap-backend',</span>
+<span class="x">    ],</span>
+<span class="x">],</span>
+
+<span class="x">// LDAP authsource (search mode)</span>
+<span class="x">'ldap-backend' =&gt; [</span>
+<span class="x">    'ldap:Ldap',</span>
+<span class="x">    'connection_string' =&gt; 'ldaps://ldap1.example.com ldaps://ldap2.example.com',</span>
+<span class="x">    'search' =&gt; [</span>
+<span class="x">        'username' =&gt; 'cn=simplesamlphp,ou=apps,dc=example,dc=com',</span>
+<span class="x">        'password' =&gt; 'secret',</span>
+<span class="x">        'base'     =&gt; ['ou=people,dc=example,dc=com'],</span>
+<span class="x">        'filter'   =&gt; '(uid=%username%)',</span>
+<span class="x">        'scope'    =&gt; 'sub',</span>
+<span class="x">    ],</span>
+<span class="x">    'attributes'        =&gt; ['*'],</span>
+<span class="x">    'attributes.binary' =&gt; ['jpegPhoto'],</span>
+<span class="x">    'timeout'           =&gt; 3,</span>
+<span class="x">    'options'           =&gt; [</span>
+<span class="x">        'network_timeout' =&gt; 3,</span>
+<span class="x">        'referrals'       =&gt; false,</span>
 <span class="x">    ],</span>
 <span class="x">],</span>
 </code></pre>
@@ -147,7 +203,7 @@ for the service you're calling. Here the service publishes
 </p>
 <div class="highlight">
  <pre><span></span><code><span class="x">'cas' =&gt; [</span>
-<span class="x">    'serviceValidate' =&gt; 'https://cas.example.com/serviceValidate',</span>
+<span class="x">    'serviceValidate' =&gt; 'https://cas.example.com/serviceValidate', // CAS v3</span>
 <span class="x">]</span>
 </code></pre>
 </div>
@@ -185,8 +241,8 @@ You can opt in to Slate support:
 <span class="x">    // Optional XPath-based attribute mappings</span>
 <span class="x">    'attributes' =&gt; [</span>
 <span class="x">        // Standard CAS attributes</span>
-<span class="x">        'uid'       =&gt; 'cas:user',</span>
-<span class="x">        'mail'      =&gt; 'cas:attributes/cas:mail',</span>
+<span class="x">        'uid'  =&gt; 'cas:user',</span>
+<span class="x">        'mail' =&gt; 'cas:attributes/cas:mail',</span>
 
 <span class="x">        // Slate namespaced attributes inside cas:attributes</span>
 <span class="x">        'slate_person' =&gt; 'cas:attributes/slate:person',</span>
@@ -230,10 +286,10 @@ for each value:
 <div class="highlight">
  <pre><span></span><code><span class="x">'cas' =&gt; [</span>
 <span class="x">    'attributes' =&gt; [</span>
-<span class="x">        'uid' =&gt; 'cas:user',</span>
-<span class="x">        'sn' =&gt; 'cas:attributes/cas:sn',</span>
+<span class="x">        'uid'       =&gt; 'cas:user',</span>
+<span class="x">        'sn'        =&gt; 'cas:attributes/cas:sn',</span>
 <span class="x">        'givenName' =&gt; 'cas:attributes/cas:firstname',</span>
-<span class="x">        'mail' =&gt; 'cas:attributes/cas:mail',</span>
+<span class="x">        'mail'      =&gt; 'cas:attributes/cas:mail',</span>
 <span class="x">    ],</span>
 <span class="x">],</span>
 </code></pre>
@@ -267,5 +323,23 @@ set
 <span class="x">]</span>
 </code></pre>
 </div>
+<h3 id="troubleshooting">
+ Troubleshooting
+</h3>
+<ul>
+ <li>
+  Mismatch between validate (v2) and serviceValidate (v3): ensure you use the correct endpoint for your CAS server.
+ </li>
+ <li>
+  Attribute mappings: verify XPath keys match your CAS response (case‑sensitive).
+ </li>
+ <li>
+  LDAP connection issues: confirm connection_string, credentials, and base DN; consider increasing
+  <code>
+   network_timeout
+  </code>
+  while testing.
+ </li>
+</ul>
 </main></body>
 </html>
