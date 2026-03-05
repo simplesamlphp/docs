@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="coreattributedump">
+ <code>
+  core:AttributeDump
+ </code>
+</h1>
+<p>
+ Filter that outputs to the system log file attributes and their values that match a given criteria.
+</p>
+<p>
+ This is particularly useful for adding debug points in your list of authproc filters as you are configuring your SimpleSAMLphp.
+</p>
+<h2 id="parameters">
+ Parameters
+</h2>
+<dl>
+ <dt>
+  <code>
+   class
+  </code>
+  (required)
+ </dt>
+ <dd>
+  This is the name of the filter.
+  It must be
+  <code>
+   core:AttributeDump
+  </code>
+  .
+ </dd>
+ <dt>
+  <code>
+   attributes
+  </code>
+ </dt>
+ <dd>
+  An array of attribute names that are to be output to the SimpleSAMLphp logs.
+  If not specified, and
+  <code>
+   attributesRegex
+  </code>
+  is not specified, all attributes will be output.
+ </dd>
+ <dt>
+  <code>
+   attributesRegex
+  </code>
+ </dt>
+ <dd>
+  An array of regular expressions. Any attribute name that matches any of the regular expressions
+  in this list are to be output to the SimpleSAMLphp logs.
+  If not specified, and
+  <code>
+   attributes
+  </code>
+  is also not specified, all attributes will be output.
+ </dd>
+ <dt>
+  <code>
+   prefix
+  </code>
+ </dt>
+ <dd>
+  A string to prefix each log line to be outputted.
+  Defaults to "AttributeDump".
+ </dd>
+ <dt>
+  <code>
+   logLevel
+  </code>
+ </dt>
+ <dd>
+  The level to log at. For the message to appear in the SimpleSAMLphp log files it needs to be at a level
+  equal to or higher than the log value you've configured in your
+  <code>
+   config.php
+  </code>
+  .
+  Valid values are: "emergency", "critical", "alert", "error", "warning", "notice", "info" or "debug".
+ </dd>
+</dl>
+<h2 id="examples">
+ Examples
+</h2>
+<p>
+ If no attribute list or list of attribute regular expressions is provided, it will simply dump all attributes:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeDump',
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ This will output the
+ <code>
+  uid
+ </code>
+ and
+ <code>
+  groups
+ </code>
+ attributes only to the logs:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeDump',
+          'attributes' =&gt; ['uid', 'groups'],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ This will output any attribute that ends in the letter
+ <code>
+  n
+ </code>
+ (eg.
+ <code>
+  fn
+ </code>
+ ,
+ <code>
+  sn
+ </code>
+ ,
+ <code>
+  cn
+ </code>
+ ):
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeDump',
+          'attributesRegex' =&gt; ['/n$/'],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ This will output the
+ <code>
+  uid
+ </code>
+ and
+ <code>
+  groups
+ </code>
+ attributes, as well as any attribute that ends in the letter
+ <code>
+  n
+ </code>
+ (eg.
+ <code>
+  fn
+ </code>
+ ,
+ <code>
+  sn
+ </code>
+ ,
+ <code>
+  cn
+ </code>
+ ) to the logs:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeDump',
+          'attributes' =&gt; ['uid', 'groups'],
+          'attributesRegex' =&gt; ['/n$/'],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ Optionally, you can specify a prefix to the log message and a log level to log at:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      49 =&gt; [
+          'class' =&gt; 'core:AttributeAdd',
+          [...]
+      ],
+
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeDump',
+          'prefix' =&gt; 'After running AttributeAdd but before applying AttributeLimit filter',
+          'logLevel' =&gt; 'debug',
+      ],
+
+      51 =&gt; [
+          'class' =&gt; 'core:AttributeLimit',
+          [...]
+      ],
+  ],
+</code></pre>
+</div>
+</main></body>
+</html>
