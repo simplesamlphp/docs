@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="coreattributeconditionaladd">
+ <code>
+  core:AttributeConditionalAdd
+ </code>
+</h1>
+<p>
+ Filter that adds attributes to the user, optionally only doing so if certain attributes and values already exist the attribute list.
+</p>
+<h2 id="configuration-format">
+ Configuration Format
+</h2>
+<dl>
+ <dd>
+  <code>
+   class
+  </code>
+  declares that this block will configure an AttributeConditionalAdd authproc. It is required.
+ </dd>
+ <dd>
+  <code>
+   %&lt;flags&gt;
+  </code>
+  allows for optional (zero or more) flags to be specified. These start with a "%" character (eg
+  <code>
+   %replace
+  </code>
+  ). See the
+  <strong>
+   Flags
+  </strong>
+  section below for more details.
+ </dd>
+ <dd>
+  <code>
+   attributes
+  </code>
+  defines a list of one or more attributes to add. It is required.
+ </dd>
+ <dd>
+  <code>
+   conditions
+  </code>
+  is optional. If it is specified, it contains a list of conditions that determine whether the
+  <code>
+   attributes
+  </code>
+  will be added or not. If the
+  <code>
+   conditions
+  </code>
+  section is not specified (or is an empty list), the
+  <code>
+   attributes
+  </code>
+  will be added. See the
+  <strong>
+   Conditions
+  </strong>
+  section below for more details.
+  <div class="codehilite">
+   <pre><span></span><code>'authproc' =&gt; [
+    50 =&gt; [
+        'class' =&gt; 'core:AttributeConditionalAdd',
+        '%&lt;flags&gt;',
+        'attributes' =&gt; [
+            'attribute' =&gt; ['value'],
+            [...],
+        ],
+        'conditions' =&gt; [],
+    ],
+],
+</code></pre>
+  </div>
+ </dd>
+</dl>
+<h2 id="conditions">
+ Conditions
+</h2>
+<p>
+ Conditions are optional. If there are one or more conditions specified, the attributes will only be added if all of the conditions evaluate to true. By default, all
+ <code>
+  conditions
+ </code>
+ must evaluate to true, unless the
+ <code>
+  %anycondition
+ </code>
+ flag is specified, in which case the attributes will be added if any of the
+ <code>
+  conditions
+ </code>
+ are true.
+</p>
+<h3 id="attrexistsany">
+ attrExistsAny
+</h3>
+<p>
+ If the current attributes includes any of the listed attribute names, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if there is an attribute named
+ <strong>
+  either
+ </strong>
+ <code>
+  customerId
+ </code>
+ OR
+ <code>
+  supplierId
+ </code>
+ (or both), then the
+ <code>
+  isExternalUser =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrExistsAny' =&gt; [
+                  'customerId',
+                  'supplierId',
+              ],
+          ],
+          'attributes' =&gt; [
+              'isExternalUser' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrexistsall">
+ attrExistsAll
+</h3>
+<p>
+ If the current attributes includes all of the listed attribute names, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if there is an attribute named
+ <code>
+  customerId
+ </code>
+ AND there is an attribute named
+ <code>
+  companyName
+ </code>
+ , then the
+ <code>
+  isCompanyUser =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrExistsAll' =&gt; [
+                  'customerId',
+                  'companyName',
+              ],
+          ],
+          'attributes' =&gt; [
+              'isCompanyUser' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrexistsregexany">
+ attrExistsRegexAny
+</h3>
+<p>
+ If the current attributes includes any attribute names that match any of the regular expressions listed, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if there is an attribute named
+ <strong>
+  either
+ </strong>
+ starting with
+ <code>
+  cust
+ </code>
+ OR ending with
+ <code>
+  PhoneNumber
+ </code>
+ , then the
+ <code>
+  isCustomer =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrExistsRegexAny' =&gt; [
+                  '/^cust/',
+                  '/PhoneNumber$/',
+              ],
+          ],
+          'attributes' =&gt; [
+              'isCustomer' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrexistsregexall">
+ attrExistsRegexAll
+</h3>
+<p>
+ If each of the regular expressions listed matches at least one of the current attributes, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if there is an attribute name starting with
+ <code>
+  email
+ </code>
+ AND there is an attribute name starting with
+ <code>
+  member
+ </code>
+ , then the
+ <code>
+  isCustomer =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrExistsRegexAll' =&gt; [
+                  '/^email/',
+                  '/^member/',
+              ],
+          ],
+          'attributes' =&gt; [
+              'isCustomer' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrvalueisany">
+ attrValueIsAny
+</h3>
+<p>
+ If the current attributes includes any of the listed attribute names, and at least one of those has any of the listed values for that attribute, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if the user has the
+ <code>
+  departmentName
+ </code>
+ attribute set, and one of the values of that attribute is
+ <code>
+  Physics
+ </code>
+ or
+ <code>
+  Chemistry
+ </code>
+ , or they have a
+ <code>
+  managementRole
+ </code>
+ attribute set, and that attribute includes the value of
+ <code>
+  Vice Chancellor
+ </code>
+ , then the
+ <code>
+  newSystemPilotUser =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrValueIsAny' =&gt; [ // any of the attributes listed below has any of the values listed
+                  'departmentName' =&gt; ['Physics', Chemistry],
+                  'managementRole' =&gt; ['Vice Chancellor'],
+              ],
+          ],
+          'attributes' =&gt; [
+              'newSystemPilotUser' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrvalueisall">
+ attrValueIsAll
+</h3>
+<p>
+ If the current attributes includes all of the listed attribute names, and each of those attributes include all of the listed values for that attribute, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ Note: this does not mean the values listed are the only values present. They are a subset of the values present.
+</p>
+<p>
+ In the below example, only the Dean of the Physics department will have the
+ <code>
+  newSystemPilotUser =&gt; ['true']
+ </code>
+ attribute added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrValueIsAll' =&gt; [ // all of the attributes listed below has all of the values listed
+                  'departmentName' =&gt; ['Physics'],
+                  'managementRole' =&gt; ['Dean'],
+              ],
+          ],
+          'attributes' =&gt; [
+              'newSystemPilotUser' =&gt; ['true'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<h3 id="attrvalueisregexany">
+ attrValueIsRegexAny
+</h3>
+<p>
+ If the current attributes includes any of the listed attribute names, and has at least one existing value for those attributes that matches any of the listed regular expressions for that attribute, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if the user has the
+ <code>
+  qualifications
+ </code>
+ attribute set, and one of the values of that attributes starts with
+ <code>
+  Certified
+ </code>
+ or ends with
+ <code>
+  Assessor
+ </code>
+ , then the
+ <code>
+  qualifiedTradie =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="p">'</span><span class="n">authproc</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="mh">50</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">'</span><span class="n">class</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">'</span><span class="nl">core:</span><span class="n">AttributeConditionalAdd</span><span class="p">',</span>
+<span class="w">          </span><span class="p">'</span><span class="n">conditions</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="p">'</span><span class="n">attrValueIsRegexAny</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="c1">// any of the attributes listed below has a value that matches any of the regex values listed</span>
+<span class="w">                  </span><span class="p">'</span><span class="n">qualifications</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">['</span><span class="o">/^</span><span class="n">Certfied</span><span class="o">/</span><span class="p">',</span><span class="w"> </span><span class="p">'</span><span class="o">/</span><span class="n">Assessor</span><span class="err">$</span><span class="o">/</span><span class="p">'],</span>
+<span class="w">              </span><span class="p">],</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">'</span><span class="n">attributes</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="p">'</span><span class="n">qualifiedTradie</span><span class="p">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">['</span><span class="n">true</span><span class="p">'],</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">  </span><span class="p">],</span>
+</code></pre>
+</div>
+<h3 id="attrvalueisregexall">
+ attrValueIsRegexAll
+</h3>
+<p>
+ If the current attributes includes all of the listed attribute names, and all of the existing values for those attributes matches any of the listed regular expressions for that attribute, the new attributes in the
+ <code>
+  attributes
+ </code>
+ section will be added.
+</p>
+<p>
+ In the below example, if the user has the
+ <code>
+  email
+ </code>
+ attribute set, and all email addresses listed as values in that attribue end with either
+ <code>
+  /@staff.example.edu$/
+ </code>
+ OR
+ <code>
+  /@student.example.edu$/
+ </code>
+ , then the
+ <code>
+  'internalUser' =&gt; ['true']
+ </code>
+ attribute will be added.
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="s1">'authproc'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span>
+<span class="n">      50 =&gt; [</span>
+<span class="n">          'class' =&gt; 'core:AttributeConditionalAdd',</span>
+<span class="n">          'conditions' =&gt; [</span>
+<span class="n">              'attrValueIsRegexAll' =&gt; [ // all of the attributes listed below, every value matches one of the regex values listed</span>
+<span class="n">                  'email' =&gt; ['/@staff.example.edu$/', '/@student.example.edu$/'</span><span class="o">]</span><span class="p">,</span>
+<span class="w">              </span><span class="err">]</span><span class="p">,</span>
+<span class="w">          </span><span class="err">]</span><span class="p">,</span>
+<span class="w">          </span><span class="s1">'attributes'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span>
+<span class="n">              'internalUser' =&gt; ['true'</span><span class="o">]</span><span class="p">,</span>
+<span class="w">          </span><span class="err">]</span><span class="p">,</span>
+<span class="w">      </span><span class="err">]</span><span class="p">,</span>
+<span class="w">  </span><span class="err">]</span><span class="p">,</span>
+</code></pre>
+</div>
+<h2 id="flags">
+ Flags
+</h2>
+<dl>
+ <dt>
+  <code>
+   %replace
+  </code>
+ </dt>
+ <dd>
+  can be used to replace all existing values in target with new ones (any existing values will be lost)
+ </dd>
+ <dt>
+  <code>
+   %nodupe
+  </code>
+ </dt>
+ <dd>
+  removes all duplicate values from the
+  <code>
+   attributes
+  </code>
+  being added. Without this flag being specified, the default behaviour is that if a value already exists that we're appending to the attribute, a duplicate is added. Note that if there are pre-existing duplicate values in the attributes being added to, those values will also be de-duplicated.
+ </dd>
+ <dt>
+  <code>
+   %anycondition
+  </code>
+ </dt>
+ <dd>
+  if there are multiple
+  <code>
+   conditions
+  </code>
+  , any of those conditions evaluating to true will cause the
+  <code>
+   attributes
+  </code>
+  to be added. Without this flag being specified, the default behaviour is that all those conditions must be true for the values in the
+  <code>
+   attributes
+  </code>
+  section to be added.
+ </dd>
+</dl>
+<h2 id="examples">
+ Examples
+</h2>
+<p>
+ The most basic case - unconditionally add a SAML attribute named
+ <code>
+  source
+ </code>
+ :
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'attributes' =&gt; [
+              'source' =&gt; ['myidp'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ You can specify multiple attributes, and attributes can have multiple values:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'attributes' =&gt; [
+              'eduPersonPrimaryAffiliation' =&gt; 'student',
+              'eduPersonAffiliation' =&gt; ['student', 'employee', 'members'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ Append to an existing attribute if a condition is satisfied, removing duplicate values (if they already have the 'management' value in the 'groups' attribute, don't add it again):
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          '%nodupe',
+          'conditions' =&gt; [
+              'attrValueIsAny' =&gt; [
+                  'role' =&gt; ['Manager', 'Director']
+              ],
+          ],
+          'attributes' =&gt; [
+              'groups' =&gt; ['management'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ Replace an existing attribute if a given attribute satisfies a condition:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          '%replace',
+          'conditions' =&gt; [
+              'attrValueIsAll' =&gt; [
+                  'userType' =&gt; ['Customer'],
+                  'onStopSupply' =&gt; ['true'],
+              ],
+          ],
+          'attributes' =&gt; [
+              'uid' =&gt; ['guest'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ Multiple conditions, where all must be true:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          'conditions' =&gt; [
+              'attrExistsAny' =&gt; [
+                  'staffId',
+              ],
+              'attrValueIsAny' =&gt; [
+                  'departmentName' =&gt; ['Physics'],
+              ],
+          ],
+          'attributes' =&gt; [
+              'groups' =&gt; ['StaffPhysics'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+<p>
+ Multiple conditions, where any can be true. In the below case, the user must either have a
+ <code>
+  supplierId
+ </code>
+ attribute, or have the "staff" role and be in the "Procurement" department to receive the
+ <code>
+  'allowedSystems' =&gt; ['procurement']
+ </code>
+ attribute:
+</p>
+<div class="codehilite">
+ <pre><span></span><code>  'authproc' =&gt; [
+      50 =&gt; [
+          'class' =&gt; 'core:AttributeConditionalAdd',
+          '%anycondition',
+          'conditions' =&gt; [
+              'attrExistsAny' =&gt; [
+                  'supplierId',
+              ],
+              'attrValueIsAll' =&gt; [
+                  'role' =&gt; ['Staff'],
+                  'departmentName' =&gt; ['Procurement'],
+              ],
+          ],
+          'attributes' =&gt; [
+              'allowedSystems' =&gt; ['procurement'],
+          ],
+      ],
+  ],
+</code></pre>
+</div>
+</main></body>
+</html>
