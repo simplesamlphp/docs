@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -136,6 +141,10 @@ For example, to use the LDAP module:
   entityID's with
   a real value manually. Dynamic records are no longer loaded from the database. See the "Upgrading and EntityIDs"
   section at the end of the document for more information.
+ </li>
+ <li>
+  EntityIDs are now checked for validity in accordance to SAML 2.0 Core specification, section 8.3.6 Entity Identifier:
+  "... The syntax of such an identifier is a URI of not more than 1024 characters in length."
  </li>
  <li>
   Modules must be enabled through the

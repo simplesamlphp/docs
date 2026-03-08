@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -197,7 +202,7 @@ configuration file:
 <dl>
  <dt>
   <code>
-   authority
+   RegistrationAuthority
   </code>
  </dt>
  <dd>
@@ -209,7 +214,7 @@ configuration file:
  </dd>
  <dt>
   <code>
-   instant
+   RegistrationInstant
   </code>
  </dt>
  <dd>
@@ -235,7 +240,7 @@ configuration file:
  </dd>
  <dt>
   <code>
-   policies
+   RegistrationPolicy
   </code>
  </dt>
  <dd>
@@ -256,9 +261,9 @@ configuration file:
       'entityID' =&gt; NULL,
       ...
       'RegistrationInfo' =&gt; [
-          'authority' =&gt; 'urn:mace:sp.example.org',
-          'instant' =&gt; '2008-01-17T11:28:03.577Z',
-          'policies' =&gt; ['en' =&gt; 'http://sp.example.org/policy', 'es' =&gt; 'http://sp.example.org/politica'],
+          'RegistrationAuthority' =&gt; 'urn:mace:sp.example.org',
+          'RegistrationInstant' =&gt; '2008-01-17T11:28:03.577Z',
+          'RegistrationPolicy' =&gt; ['en' =&gt; 'http://sp.example.org/policy', 'es' =&gt; 'http://sp.example.org/politica'],
       ],
   ],
 </code></pre>
@@ -271,8 +276,8 @@ configuration file:
 <span class="w">      </span><span class="s1">'host'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'__DEFAULT__'</span><span class="p">,</span>
 <span class="w">      </span><span class="nx">...</span>
 <span class="w">      </span><span class="s1">'RegistrationInfo'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">[</span>
-<span class="w">          </span><span class="s1">'authority'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'urn:mace:idp.example.org'</span><span class="p">,</span>
-<span class="w">          </span><span class="s1">'instant'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'2008-01-17T11:28:03.577Z'</span><span class="p">,</span>
+<span class="w">          </span><span class="s1">'RegistrationAuthority'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'urn:mace:idp.example.org'</span><span class="p">,</span>
+<span class="w">          </span><span class="s1">'RegistrationInstant'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'2008-01-17T11:28:03.577Z'</span><span class="p">,</span>
 <span class="w">      </span><span class="cp">]</span><span class="o">,</span>
 <span class="w">  </span><span class="o">];</span>
 </code></pre>
@@ -290,8 +295,8 @@ configuration file:
 <span class="w">              </span><span class="nx">...</span>
 <span class="w">          </span><span class="cp">]</span><span class="o">,</span>
 <span class="w">          </span><span class="s1">'RegistrationInfo'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="cp">[</span>
-<span class="w">              </span><span class="s1">'authority'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'urn:mace:example.federation'</span><span class="p">,</span>
-<span class="w">              </span><span class="s1">'policies'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">[</span><span class="s1">'en'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'http://example.org/federation_policy'</span><span class="p">,</span><span class="w"> </span><span class="s1">'es'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'https://example.org/politica_federacion'</span><span class="cp">]</span><span class="o">,</span>
+<span class="w">              </span><span class="s1">'RegistrationAuthority'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'urn:mace:example.federation'</span><span class="p">,</span>
+<span class="w">              </span><span class="s1">'RegistrationPolicy'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">[</span><span class="s1">'en'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'http://example.org/federation_policy'</span><span class="p">,</span><span class="w"> </span><span class="s1">'es'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'https://example.org/politica_federacion'</span><span class="cp">]</span><span class="o">,</span>
 <span class="w">          </span><span class="o">],</span>
 <span class="w">      </span><span class="o">],</span>
 <span class="w">  </span><span class="o">];</span>

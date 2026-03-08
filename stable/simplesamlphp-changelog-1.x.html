@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -93,6 +98,16 @@
     SimpleSAMLphp changelog
    </a>
    <ul>
+    <li>
+     <a href="#version-1198">
+      Version 1.19.8
+     </a>
+    </li>
+    <li>
+     <a href="#version-1197">
+      Version 1.19.7
+     </a>
+    </li>
     <li>
      <a href="#version-1196">
       Version 1.19.6
@@ -533,6 +548,46 @@
  This document lists the changes between versions of SimpleSAMLphp.
 See the upgrade notes for specific information about upgrading.
 </p>
+<h2 id="version-1198">
+ Version 1.19.8
+</h2>
+<p>
+ Released 2-3-2023
+</p>
+<ul>
+ <li>
+  Dependencies have been bumped (CVE-2022-24894)
+ </li>
+</ul>
+<h2 id="version-1197">
+ Version 1.19.7
+</h2>
+<p>
+ Released 5-12-2022
+</p>
+<ul>
+ <li>
+  Backported fix to error report page (#1637)
+ </li>
+ <li>
+  Many doc fixes
+ </li>
+ <li>
+  Fixed the handling of SAML AttributeQuery and SOAP-binding (#314 @ saml2)
+ </li>
+ <li>
+  Fixed serialization of complex AttributeValue structures
+ </li>
+ <li>
+  Bump composer + npm dependencies (includes a fix for CVE-2022-39261)
+ </li>
+ <li>
+  Many updated translations
+ </li>
+ <li>
+  Handle ETag/If-None-Match logic (#1672 + #1673)
+ </li>
+</ul>
 <h2 id="version-1196">
  Version 1.19.6
 </h2>

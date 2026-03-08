@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -292,13 +297,13 @@ stored in
 <span class="nv">$metadata</span><span class="p">[</span><span class="s1">'https://example.org/saml-idp'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'SingleSignOnService'</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="p">[</span>
-          <span class="s1">'Location'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.org/simplesaml/saml2/idp/SSOService.php'</span><span class="p">,</span>
+          <span class="s1">'Location'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.org/simplesaml/module.php/saml/idp/singleSignOnService'</span><span class="p">,</span>
           <span class="s1">'Binding'</span> <span class="o">=&gt;</span> <span class="s1">'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'</span><span class="p">,</span>
         <span class="p">],</span>
     <span class="p">],</span>
     <span class="s1">'SingleLogoutService'</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="p">[</span>
-          <span class="s1">'Location'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.org/simplesaml/saml2/idp/SingleLogoutService.php'</span><span class="p">,</span>
+          <span class="s1">'Location'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.org/simplesaml/module.php/saml/idp/singleLogout'</span><span class="p">,</span>
           <span class="s1">'ResponseLocation'</span> <span class="o">=&gt;</span> <span class="s1">'https://sp.example.org/LogoutResponse'</span><span class="p">,</span>
           <span class="s1">'Binding'</span> <span class="o">=&gt;</span> <span class="s1">'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'</span><span class="p">,</span>
         <span class="p">],</span>

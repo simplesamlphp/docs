@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -94,13 +99,8 @@
    </a>
    <ul>
     <li>
-     <a href="#version-245">
-      Version 2.4.5
-     </a>
-    </li>
-    <li>
-     <a href="#version-244">
-      Version 2.4.4
+     <a href="#version-250">
+      Version 2.5.0
      </a>
     </li>
     <li>
@@ -255,42 +255,29 @@ See the
  </a>
  for specific information about upgrading.
 </p>
-<h2 id="version-245">
- Version 2.4.5
+<h2 id="version-250">
+ Version 2.5.0
 </h2>
 <p>
- Released TBD
+ Released TBD - November 2025 - as soon as Symfony 7.4 is released
 </p>
-<h2 id="version-244">
- Version 2.4.4
-</h2>
 <p>
- Released 2025-12-08
+ <code>
+  authorize
+ </code>
 </p>
 <ul>
  <li>
-  store.redis.tls should apply to sentinels (#2557)
- </li>
- <li>
-  Fix unhandled canonicalization failure (CVE-2025-66475)
- </li>
- <li>
-  Bump dependencies
+  Add entityID based filtering (simplesamlphp/simplesamlphp-module-authorize#30) (v1.7.0)
  </li>
 </ul>
 <h2 id="version-243">
  Version 2.4.3
 </h2>
 <p>
- Released 2025-10-05
+ Released TBD
 </p>
 <ul>
- <li>
-  Prevent emulation of SQL prepare-statements
- </li>
- <li>
-  Add Ukrainian translations (#2501)
- </li>
  <li>
   Update and improve Indonesian translations (#2462)
  </li>
@@ -323,12 +310,6 @@ See the
  <li>
   If session.check_function is set and can not be called an error is raised (#2498)
  </li>
- <li>
-  Fix FontAwesome icon names (#2509)
- </li>
- <li>
-  NameIDType attributes are now JSON-serializable - these objects might appear in the array returned by getAuthDataArray()
- </li>
 </ul>
 <p>
  <code>
@@ -338,16 +319,6 @@ See the
 <ul>
  <li>
   Remove reauthentication-button when reauthentication is disabled (simplesamlphp/simplesamlphp-module-authorize#24) (v1.6.2)
- </li>
-</ul>
-<p>
- <code>
-  radius
- </code>
-</p>
-<ul>
- <li>
-  Add some more logging (v2.0.3)
  </li>
 </ul>
 <h2 id="version-242">

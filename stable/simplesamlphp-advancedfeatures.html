@@ -51,8 +51,13 @@
    </p>
    <div class="mtoolbar">
     <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
      <a href="/docs/2.4/index.html">
-      2.4 (stable)
+      2.4
      </a>
     </div>
     <div class="menuitem">
@@ -385,23 +390,23 @@ from doing anything.
 <span class="x">     * @param \SimpleSAML\Session $session The session to approve/reject</span>
 <span class="x">     * @param bool $init true if called during session init.</span>
 <span class="x">     */</span>
-<span class="x">    public static function checkSession(\SimpleSAML\Session $session, bool $init = false)</span>
+<span class="x">    public static function checkSession(\SimpleSAML\Session $session, bool $init = false): bool</span>
 <span class="x">    {</span>
 <span class="x">        $authority = "default-sp";</span>
 
-<span class="x">        if( $init ) {</span>
+<span class="x">        if ($init) {</span>
 <span class="x">            // init can not fail</span>
 <span class="x">            // return value is ignored</span>
 <span class="x">            return true;</span>
 <span class="x">        }</span>
 
-<span class="x">        $ad = $session-&gt;getAuthData($authority,"Attributes");</span>
-<span class="x">        if( !$ad ) {</span>
+<span class="x">        $ad = $session-&gt;getAuthData($authority, "Attributes");</span>
+<span class="x">        if (empty($ad)) {</span>
 <span class="x">            return true;</span>
 <span class="x">        }</span>
 <span class="x">        $uid = $ad["uid"];</span>
 
-<span class="x">        if( in_array("badboy@localhost.localdomain",$uid)) {</span>
+<span class="x">        if (in_array("badboy@localhost.localdomain", $uid)) {</span>
 <span class="x">            // drop the session</span>
 <span class="x">            return false;</span>
 <span class="x">        }</span>
