@@ -173,10 +173,10 @@ All these parameters override the equivalent option from the configuration.
   is set and contains one or more values.
   Possible values:
   <div class="codehilite">
-   <pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_EXACT</span><span class="err">`</span><span class="w"> </span><span class="p">(</span><span class="k">default</span><span class="p">)</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_BETTER</span><span class="err">`</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_MINIMUM</span><span class="err">`</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_MAXIMUM</span><span class="err">`</span>
+   <pre><span></span><code><span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_EXACT`</span> (default)
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_BETTER`</span>
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_MINIMUM`</span>
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_MAXIMUM`</span>
 </code></pre>
   </div>
  </dd>
@@ -236,7 +236,7 @@ All these parameters override the equivalent option from the configuration.
  </dt>
  <dd>
   Add a Subject element with a NameID to the SAML AuthnRequest for the IdP.
-  This must be a \SimpleSAML\SAML2\XML\saml\NameID object.
+  This must be a \SAML2\XML\saml\NameID object.
  </dd>
  <dt>
   <code>
@@ -276,7 +276,7 @@ To retrieve these attributes, the application can use the
   getAuthData()
  </code>
  -function from the
- <a href="./simplesamlphp-sp-api.html">
+ <a href="../simplesamlphp-sp-api.html">
   SP API
  </a>
  .
@@ -298,7 +298,7 @@ The following attributes are available:
  </dt>
  <dd>
   The NameID the user was issued by the IdP.
-  This is a \SimpleSAML\SAML2\XML\saml\NameID object with the various fields from the NameID.
+  This is a \SAML2\XML\saml\NameID object with the various fields from the NameID.
  </dd>
  <dt>
   <code>
@@ -359,14 +359,17 @@ The following attributes are available:
   </code>
  </dt>
  <dd>
-  List of Assertion Consumer Services in the generated metadata. Specified in the format detailed in the
-  <a href="../simplesamlphp-metadata-endpoints.html">
-   Metadata endpoints
-  </a>
-  documentation.
-  Note that this list is taken at face value, so it's not useful to list
-  anything here that the SP auth source does not actually support (unless the URLs point
-  externally).
+  <p>
+   List of Assertion Consumer Services in the generated metadata.
+  Specified in the format detailed in the
+   <a href="../simplesamlphp-metadata-endpoints.html">
+    Metadata endpoints
+   </a>
+   documentation.
+  Note that this list is taken at face value, so it's not useful to
+  list anything here that the SP auth source does not actually
+  support (unless the URLs point externally).
+  </p>
  </dd>
  <dt>
   <code>
@@ -497,10 +500,10 @@ The following attributes are available:
   is set and contains one or more values.
   Possible values:
   <div class="codehilite">
-   <pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_EXACT</span><span class="err">`</span><span class="w"> </span><span class="p">(</span><span class="k">default</span><span class="p">)</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_BETTER</span><span class="err">`</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_MINIMUM</span><span class="err">`</span>
-<span class="o">*</span><span class="w"> </span><span class="err">`</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">COMPARISON_MAXIMUM</span><span class="err">`</span>
+   <pre><span></span><code><span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_EXACT`</span> (default)
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_BETTER`</span>
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_MINIMUM`</span>
+<span class="k">*</span> <span class="sb">`SAML2\Constants::COMPARISON_MAXIMUM`</span>
 </code></pre>
   </div>
  </dd>
@@ -844,10 +847,10 @@ The following attributes are available:
  <dd>
   An array of the format(s) listed in the SP metadata that this SP will accept. Example:
   <div class="codehilite">
-   <pre><span></span><code><span class="w">    </span><span class="err">'</span><span class="nx">NameIDFormat</span><span class="err">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">NAMEID_PERSISTENT</span><span class="p">,</span>
-<span class="w">        </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">Constants</span><span class="o">::</span><span class="nx">NAMEID_TRANSIENT</span><span class="p">,</span>
-<span class="w">    </span><span class="p">],</span>
+   <pre><span></span><code>    'NameIDFormat' =&gt; [
+        \SAML2\Constants::NAMEID_PERSISTENT,
+        \SAML2\Constants::NAMEID_TRANSIENT,
+    ],
 </code></pre>
   </div>
  </dd>
@@ -1067,7 +1070,7 @@ The following attributes are available:
  <dd>
   Enable support for the SAML 2.0 Holder-of-Key SSO profile.
   See the documentation for the
-  <a href="../simplesamlphp-hok-sp.html">
+  <a href="./simplesamlphp-hok-sp.html">
    Holder-of-Key profile
   </a>
   .
@@ -1291,7 +1294,7 @@ The following attributes are available:
 <div class="codehilite">
  <pre><span></span><code><span class="w">  </span><span class="err">$</span><span class="nx">dom</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">XML</span><span class="err">\</span><span class="nx">DOMDocumentFactory</span><span class="o">::</span><span class="nx">create</span><span class="p">();</span>
 <span class="w">  </span><span class="err">$</span><span class="nx">ce</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">dom</span><span class="o">-&gt;</span><span class="nx">createElementNS</span><span class="p">(</span><span class="err">'</span><span class="nx">http</span><span class="p">:</span><span class="c1">//www.example.com/XFoo', 'xfoo:test', 'Test data!');</span>
-<span class="w">  </span><span class="err">$</span><span class="nx">ext</span><span class="p">[]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">SAML2</span><span class="err">\</span><span class="nx">XML</span><span class="err">\</span><span class="nx">Chunk</span><span class="p">(</span><span class="err">$</span><span class="nx">ce</span><span class="p">);</span>
+<span class="w">  </span><span class="err">$</span><span class="nx">ext</span><span class="p">[]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">XML</span><span class="err">\</span><span class="nx">Chunk</span><span class="p">(</span><span class="err">$</span><span class="nx">ce</span><span class="p">);</span>
 
 <span class="w">  </span><span class="err">$</span><span class="nx">auth</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">Auth</span><span class="err">\</span><span class="nx">Simple</span><span class="p">(</span><span class="err">'</span><span class="k">default</span><span class="o">-</span><span class="nx">sp</span><span class="err">'</span><span class="p">);</span>
 <span class="w">  </span><span class="err">$</span><span class="nx">auth</span><span class="o">-&gt;</span><span class="nx">login</span><span class="p">([</span>

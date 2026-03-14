@@ -136,8 +136,13 @@
      </a>
     </li>
     <li>
-     <a href="#hook-interface">
-      Hook interface
+     <a href="#event-listeners-new-hooks">
+      Event listeners (new Hooks)
+     </a>
+    </li>
+    <li>
+     <a href="#hook-interface-simplesamlphp-24-and-below">
+      Hook interface (SimpleSAMLphp 2.4 and below)
      </a>
     </li>
    </ul>
@@ -568,9 +573,252 @@ setting
  </code>
  .
 </p>
-<h2 id="hook-interface">
- Hook interface
+<h2 id="event-listeners-new-hooks">
+ Event listeners (new Hooks)
 </h2>
+<p>
+ In SimpleSAMLphp 2.5 the hook interface was updated to use PSR-14
+events
+ <a href="https://www.php-fig.org/psr/psr-14">
+  PSR-14 events
+ </a>
+ as well as
+the legacy custom "hook" interface. When hooks are called in 2.5 both
+the new PSR-14 event listeners are called followed by the older custom
+hook. You are likely better to create new event listeners in new
+configurations and might like to consider moving your hooks to event
+listeners over time.
+</p>
+<p>
+ If you are using an older version of SimpleSAMLphp please see the
+below section for information on how to use the older interface.
+</p>
+<p>
+ This section discusses how to make new event listeners with an
+eye toward moving an existing hook to become an event listener.
+</p>
+<p>
+ The PSR events that can be used are defined in your module's
+src/Event subdirectory. For example, for the admin module you can
+see modules/admin/src/Event/ConfigPageEvent.php which defines
+a class ConfigPageEvent in the
+ <code>
+  SimpleSAML\Module\admin\Event
+ </code>
+ namespace.
+</p>
+<p>
+ That event takes some state in the constructor and likely has one or
+more access methods to later retrieve that state.
+</p>
+<p>
+ The event might be listened to by the same or another module by
+defining a
+ <code>
+  Listener
+ </code>
+ class. In the running concrete example the class
+in modules/cron/src/Event/Listener/ConfigPageListener.php defines a
+ <code>
+  ConfigPageListener
+ </code>
+ class in the
+ <code>
+  SimpleSAML\Module\cron\Event\Listener
+ </code>
+ namespace. That listener class
+has an
+ <code>
+  __invoke
+ </code>
+ method that will be passed the
+ <code>
+  ConfigPageEvent
+ </code>
+ object and has no return value.
+</p>
+<p>
+ The
+ <code>
+  ConfigPageEvent
+ </code>
+ is a reasonable starting point for testing your
+own listener. If you create a new listener for ConfigPageEvent you can
+use
+ <code>
+  Logger::error
+ </code>
+ to check that you get called and use the
+admin/config page through the admin module to trigger this event
+fairly easily. You might like to base your new listener on the
+ConfigPageListener for the cron module.
+</p>
+<p>
+ To update a hook from a 2.4 release or below you will need to move
+your hook class from the
+ <code>
+  hooks
+ </code>
+ directory to the
+ <code>
+  src/Event/Listener
+ </code>
+ subdirectory. Considering the config page example again, the
+ <code>
+  hooks/hook_configpage.php
+ </code>
+ file should move to
+ <code>
+  src/Event/Listener
+ </code>
+ .
+That hook defined a single top level function with a specific function
+name
+ <code>
+  cron_hook_configpage
+ </code>
+ . In the event listener the new
+ <code>
+  src/Event/Listener/ConfigPageListener.php
+ </code>
+ file will need to be in
+the
+ <code>
+  SimpleSAML\Module\cron\Event\Listener
+ </code>
+ namespace and define a
+class
+ <code>
+  ConfigPageListener
+ </code>
+ . The single top level function is moved
+into a member function
+ <code>
+  __invoke
+ </code>
+ taking a single parameter
+ <code>
+  ConfigPageEvent
+ </code>
+ .
+</p>
+<p>
+ The old hook function took a reference
+ <code>
+  Template &amp;$template
+ </code>
+ directly
+as the single argument. The new PSR class takes a
+ <code>
+  ConfigPageEvent
+ </code>
+ object. The ConfigPageEvent object provides access to the template
+using the
+ <code>
+  getTemplate
+ </code>
+ method on the event.
+</p>
+<p>
+ The old hook function in
+ <code>
+  hooks
+ </code>
+ might look like the following.
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="c1">// old hook interface</span>
+<span class="w">  </span><span class="k">function</span><span class="w"> </span><span class="n">cron_hook_configpage</span><span class="p">(</span><span class="n">Template</span><span class="w"> </span><span class="o">&amp;</span><span class="no">$</span><span class="n">template</span><span class="p">):</span><span class="w"> </span><span class="n">void</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="no">$</span><span class="n">template</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s">'links'</span><span class="p">][]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s">'href'</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Module</span><span class="p">::</span><span class="n">getModuleURL</span><span class="p">(</span><span class="s">'cron/info'</span><span class="p">),</span>
+<span class="w">        </span><span class="s">'text'</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Translate</span><span class="p">::</span><span class="n">noop</span><span class="p">(</span><span class="s">'Cron module information page'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">];</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre>
+</div>
+<p>
+ The new Listener version in
+ <code>
+  src/Event/Listener
+ </code>
+ is shown below.
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="kd">class</span><span class="w"> </span><span class="nx">ConfigPageListener</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">public</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="nx">__invoke</span><span class="p">(</span><span class="nx">ConfigPageEvent</span><span class="w"> </span><span class="err">$</span><span class="nx">event</span><span class="p">):</span><span class="w"> </span><span class="nx">void</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="err">$</span><span class="nx">template</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">event</span><span class="o">-&gt;</span><span class="nx">getTemplate</span><span class="p">();</span>
+
+<span class="w">          </span><span class="err">$</span><span class="nx">template</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">[</span><span class="err">'</span><span class="nx">links</span><span class="err">'</span><span class="p">][]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="err">'</span><span class="nx">href</span><span class="err">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">Module</span><span class="o">::</span><span class="nx">getModuleURL</span><span class="p">(</span><span class="err">'</span><span class="nx">cron</span><span class="o">/</span><span class="nx">info</span><span class="err">'</span><span class="p">),</span>
+<span class="w">              </span><span class="err">'</span><span class="nx">text</span><span class="err">'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">\</span><span class="nx">SimpleSAML</span><span class="err">\</span><span class="nx">Locale</span><span class="err">\</span><span class="nx">Translate</span><span class="o">::</span><span class="nx">noop</span><span class="p">(</span><span class="err">'</span><span class="nx">Cron</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="nx">information</span><span class="w"> </span><span class="nx">page</span><span class="err">'</span><span class="p">),</span>
+<span class="w">          </span><span class="p">];</span>
+<span class="w">          </span><span class="o">...</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre>
+</div>
+<p>
+ That
+ <code>
+  ConfigPageEvent
+ </code>
+ class is defined in
+ <code>
+  modules/admin/src/Event/ConfigPageEvent.php
+ </code>
+ .
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="n">ConfigPageEvent</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">      </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span>
+<span class="w">          </span><span class="n">private</span><span class="w"> </span><span class="n">readonly</span><span class="w"> </span><span class="n">XHTML</span>\<span class="n">Template</span><span class="w"> </span><span class="o">$</span><span class="n">template</span><span class="p">,</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">      </span><span class="p">{}</span>
+
+<span class="w">      </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">getTemplate</span><span class="p">():</span><span class="w"> </span><span class="n">XHTML</span>\<span class="n">Template</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">template</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre>
+</div>
+<p>
+ In summary to move a hook to the new PSR-14 events you have to move
+the hook file to your module's src/Event/Listener directory and have
+it take a new Event object that passes the function argument to it.
+The event will be a simple class defined in your
+ <code>
+  src/Event
+ </code>
+ directory.
+</p>
+<p>
+ When you wish to call event listeners in your code you can use code
+like the following. The event dispatcher is passed an event which
+contains all of the state you wish to make available to the event
+listeners. You can then get the state which may have been updated by
+one or more listeners using a getter method and do something with the
+result.
+</p>
+<div class="codehilite">
+ <pre><span></span><code><span class="w">  </span><span class="o">$</span><span class="nt">eventDispatcher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">ModuleEventDispatcherFactory</span><span class="p">::</span><span class="nd">getInstance</span><span class="o">();</span>
+<span class="w">  </span><span class="o">$</span><span class="nt">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">eventDispatcher-</span><span class="o">&gt;</span><span class="nt">dispatch</span><span class="o">(</span><span class="nt">new</span><span class="w"> </span><span class="nt">ConfigPageEvent</span><span class="o">($</span><span class="nt">t</span><span class="o">));</span>
+<span class="w">  </span><span class="o">$</span><span class="nt">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">event-</span><span class="o">&gt;</span><span class="nt">getTemplate</span><span class="o">();</span>
+</code></pre>
+</div>
+<h2 id="hook-interface-simplesamlphp-24-and-below">
+ Hook interface (SimpleSAMLphp 2.4 and below)
+</h2>
+<p>
+ Releases 2.4 and below use a custom hook interface to allow code to
+run when specific things of interest are happening. If you are using
+SimpleSAMLphp 2.5 or above please see the above section on Event listeners instead.
+</p>
 <p>
  The hook interface allows you to call a hook function in all enabled
 modules which define that hook. Hook functions are stored in a

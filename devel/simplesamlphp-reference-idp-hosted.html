@@ -1161,7 +1161,7 @@ See the documentation for those extensions for more details:
  <dd>
   An array of
   <code>
-   \SAML2\XML\Chunk
+   \SimpleSAML\XML\Chunk
   </code>
   s to include in the IdP metadata extensions, at the same level as
   <code>
@@ -1210,11 +1210,11 @@ See the documentation for those extensions for more details:
 <div class="highlight">
  <pre><span></span><code><span class="cp">&lt;?php</span>
 
-<span class="nv">$dom</span> <span class="o">=</span> <span class="nx">\SAML2\DOMDocumentFactory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+<span class="nv">$dom</span> <span class="o">=</span> <span class="nx">\SimpleSAML\XML\DOMDocumentFactory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
 <span class="nv">$republishRequest</span> <span class="o">=</span> <span class="nv">$dom</span><span class="o">-&gt;</span><span class="na">createElementNS</span><span class="p">(</span><span class="s1">'http://eduid.cz/schema/metadata/1.0'</span><span class="p">,</span> <span class="s1">'eduidmd:RepublishRequest'</span><span class="p">);</span>
 <span class="nv">$republishTarget</span> <span class="o">=</span> <span class="nv">$dom</span><span class="o">-&gt;</span><span class="na">createElementNS</span><span class="p">(</span><span class="s1">'http://eduid.cz/schema/metadata/1.0'</span><span class="p">,</span> <span class="s1">'eduidmd:RepublishTarget'</span><span class="p">,</span> <span class="s1">'http://edugain.org/'</span><span class="p">);</span>
 <span class="nv">$republishRequest</span><span class="o">-&gt;</span><span class="na">appendChild</span><span class="p">(</span><span class="nv">$republishTarget</span><span class="p">);</span>
-<span class="nv">$ext</span> <span class="o">=</span> <span class="p">[</span><span class="k">new</span> <span class="nx">\SAML2\XML\Chunk</span><span class="p">(</span><span class="nv">$republishRequest</span><span class="p">)];</span>
+<span class="nv">$ext</span> <span class="o">=</span> <span class="p">[</span><span class="k">new</span> <span class="nx">\SimpleSAML\XML\Chunk</span><span class="p">(</span><span class="nv">$republishRequest</span><span class="p">)];</span>
 
 <span class="nv">$metadata</span><span class="p">[</span><span class="s1">'https://example.org/saml-idp'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'host'</span> <span class="o">=&gt;</span> <span class="s1">'__DEFAULT__'</span><span class="p">,</span>
