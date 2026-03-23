@@ -106,6 +106,54 @@ The following changes are relevant for installers and/or developers.
   Symfony was upgraded to 7.4 (LTS).
  </li>
 </ul>
+<h2 id="web-proxy">
+ Web-proxy
+</h2>
+<ul>
+ <li>
+  <p>
+   This release replaces several cases of
+   <code>
+    file_get_contents()
+   </code>
+   and direct use of
+   <code>
+    curl_
+   </code>
+   -functions with the Symfony HTTP-client. If you have a proxy set in
+   <code>
+    config.php
+   </code>
+   ,
+  please ensure that is has
+   <code>
+    http://
+   </code>
+   or
+   <code>
+    https://
+   </code>
+   as a scheme, appropriate to
+  your use-case. The old
+   <code>
+    tcp://
+   </code>
+   scheme may no longer work correctly for all use-cases.
+  </p>
+  <p>
+   To be even more future-proof, set the proxy-configuration to
+   <code>
+    null
+   </code>
+   and use environment-
+variables instead. See the
+   <a href="https://symfony.com/doc/current/http_client.html#http-proxies">
+    Symfony documentation
+   </a>
+   for more information
+  </p>
+ </li>
+</ul>
 <h2 id="general-upgrade-advice">
  General Upgrade Advice
 </h2>

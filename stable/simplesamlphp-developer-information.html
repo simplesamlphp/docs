@@ -151,6 +151,11 @@
      </ul>
     </li>
     <li>
+     <a href="#branches">
+      Branches
+     </a>
+    </li>
+    <li>
      <a href="#making-a-release">
       Making a release
      </a>
@@ -481,6 +486,147 @@ details of the syntax formatting.
  You will probably want to make a script or alias to the above command
 and apply it before pushing documentation changes to github.
 </p>
+<h2 id="branches">
+ Branches
+</h2>
+<p>
+ There will be a
+ <code>
+  master
+ </code>
+ branch, a
+ <code>
+  current-release-branch
+ </code>
+ , and a
+ <code>
+  next-release-branch
+ </code>
+ . As at March 2026 these might be
+ <code>
+  2.5
+ </code>
+ and
+ <code>
+  2.6
+ </code>
+ for current and next release.
+</p>
+<p>
+ New code will mostly go into the
+ <code>
+  master
+ </code>
+ branch. This can then be
+replicated into the
+ <code>
+  current-release-branch
+ </code>
+ with the following
+(assuming 2.5 is the current release).
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c1"># After some commits have been added to master intended for v2.5.*...</span>
+git<span class="w"> </span>checkout<span class="w"> </span>simplesamlphp-2.5
+git<span class="w"> </span>merge<span class="w"> </span>master
+</code></pre>
+</div>
+<p>
+ New code that the project does not want in the
+ <code>
+  current-release-branch
+ </code>
+ should be committed directly into the
+ <code>
+  next-release-branch
+ </code>
+ . In this example the 2.6 release will be the
+target of that merge or PR.
+</p>
+<p>
+ Periodically the
+ <code>
+  next-release-branch
+ </code>
+ will want to bring in changes
+from
+ <code>
+  master
+ </code>
+ (and thus from the
+ <code>
+  current-release-branch
+ </code>
+ ). This can
+be done by merging master into the
+ <code>
+  next-release-branch
+ </code>
+ as shown
+below. This might require conflicts between master and the new code in
+ <code>
+  next-release-branch
+ </code>
+ to be resolved. The more frequently the merge is
+performed the less work will be required each time.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c1"># After some commits have been added to master and "next-release-branch" separately...</span>
+git<span class="w"> </span>checkout<span class="w"> </span>simplesamlphp-2.6
+git<span class="w"> </span>merge<span class="w"> </span>master
+<span class="c1"># This might have conflicts, but those should be easy to resolve, since we know what did we do for next release ...</span>
+</code></pre>
+</div>
+<p>
+ When we want to make the
+ <code>
+  next-release-branch
+ </code>
+ the current branch (for
+example, releasing 2.6.0 in this running example) then the branch is
+merged back into master. Firstly, merge
+ <code>
+  master
+ </code>
+ into
+ <code>
+  next-release-branch
+ </code>
+ as shown above. Then the
+ <code>
+  next-release-branch
+ </code>
+ can be made the
+ <code>
+  current-release-branch
+ </code>
+ by running the following
+merge.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c1"># When we are ready to make "next-release-branch" the current release</span>
+git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>merge<span class="w"> </span>simplesamlphp-2.6
+<span class="c1"># This should go without any conflicts, since we kept merging the "next-release-branch" with master</span>
+</code></pre>
+</div>
+<p>
+ The following script will merge master into the current and next
+release branches. Only when a next release branch becomes the current
+branch is anything needing to be merged back into master.
+</p>
+<div class="highlight">
+ <pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>pull
+git<span class="w"> </span>checkout<span class="w"> </span>simplesamlphp-2.5
+git<span class="w"> </span>merge<span class="w"> </span>master
+git<span class="w"> </span>push
+
+git<span class="w"> </span>checkout<span class="w"> </span>simplesamlphp-2.6
+git<span class="w"> </span>merge<span class="w"> </span>master
+git<span class="w"> </span>push
+</code></pre>
+</div>
 <h2 id="making-a-release">
  Making a release
 </h2>
