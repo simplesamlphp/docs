@@ -99,6 +99,11 @@
    </a>
    <ul>
     <li>
+     <a href="#version-252">
+      Version 2.5.2
+     </a>
+    </li>
+    <li>
      <a href="#version-251">
       Version 2.5.1
      </a>
@@ -260,11 +265,17 @@ See the
  </a>
  for specific information about upgrading.
 </p>
+<h2 id="version-252">
+ Version 2.5.2
+</h2>
+<p>
+ Released TBD
+</p>
 <h2 id="version-251">
  Version 2.5.1
 </h2>
 <p>
- Released TBD
+ Released 2026-05-29
 </p>
 <ul>
  <li>
@@ -276,6 +287,31 @@ See the
  <li>
   Have getServerHTTPS() honor https baseurlpath when $_SERVER['HTTPS'] is absent (#2638)
  </li>
+ <li>
+  Fix attributemap fox Entra ID (#2633)
+ </li>
+ <li>
+  Expand support range for PHPmailer (#2627)
+ </li>
+ <li>
+  Restore functionality to specify email from of outgoing messages. (#2625)
+ </li>
+ <li>
+  Fix HTTP-client when using a proxy (#2622)
+ </li>
+ <li>
+  Make FilterScopes handling of non-scoped values configurable (#2615)
+ </li>
+</ul>
+<p>
+ <code>
+  admin
+ </code>
+</p>
+<ul>
+ <li>
+  Allow admin menu to wrap (#2623)
+ </li>
 </ul>
 <p>
  <code>
@@ -285,6 +321,19 @@ See the
 <ul>
  <li>
   Fix compatibility with SSP 2.5 (v1.3.1)
+ </li>
+</ul>
+<p>
+ <code>
+  saml2
+ </code>
+</p>
+<ul>
+ <li>
+  Possible DoS via XPath Transform (CVE-2026-49289)
+ </li>
+ <li>
+  HTTP-Artifact TLS validator confusion allows cross-IdP authentication bypass (CVE-2026-49283 )
  </li>
 </ul>
 <h2 id="version-250">
