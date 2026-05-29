@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="google-site-verification" content="2S8M18BgYs8cLRL6ClTrfW_xGxfFtMZu2b2jhjrNlss">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleSAMLphp Documentation</title>
+
+  <link rel="stylesheet" href="/res/css/style.css">
+  <link rel="stylesheet" href="/res/css/layout.css">
+</head>
+<body>
+<header>
+ <div id="header">
+  <div class="right">
+   <form action="https://www.google.com/cse" method="get" style="margin-top: 2.5rem; margin-right: 2rem">
+    <input name="cx" type="hidden" value="004202914224971217557:8ks4jjstupq"/>
+    <input name="siteurl" type="hidden" value="www.google.com/cse/home?cx=004202914224971217557:8ks4jjstupq"/>
+    <input name="adkw" type="hidden" value="AELymgVJ6Sk-kOvUjbxvgShTLwiFlma2evFuVCh0r8q23vn_4eVnkcdnPfbgMvYUTpJpVlb-KkGAKkbn0i-AlWHsVRR9O0J4CNb6cXFkEKRdjXxsC_NlVD4"/>
+    <input name="q" placeholder="Search" type="search" value=""/>
+   </form>
+  </div>
+  <div class="v-center logo-header">
+   <div id="logo">
+    <a href="https://simplesamlphp.org" style="color: #fff; text-decoration: none">
+     <span class="simple">
+      Simple
+     </span>
+     <span class="saml">
+      SAML
+     </span>
+     <span class="simple">
+      php
+     </span>
+    </a>
+   </div>
+  </div>
+ </div>
+ <!-- Grey header bar below -->
+ <nav>
+  <div id="headerbar" style="clear: both">
+   <p id="breadcrumb">
+    <a href="https://simplesamlphp.org">
+     Home
+    </a>
+    » Documentation
+   </p>
+   <div class="mtoolbar">
+    <div class="menuitem">
+     <a href="/docs/2.5/index.html">
+      2.5 (stable)
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.4/index.html">
+      2.4
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.3/index.html">
+      2.3
+     </a>
+    </div>
+    <div class="menuitem">
+     <a href="/docs/2.2/index.html">
+      2.2
+     </a>
+    </div>
+    <div class="menuitem first">
+     <a href="/docs/devel/index.html">
+      devel
+     </a>
+    </div>
+    <div class="menuitem last">
+     <a href="/docs/contributed_modules.html">
+      Contributed modules
+     </a>
+    </div>
+   </div>
+   <br style="height: 0px; clear: both"/>
+  </div>
+  <!-- /#headerbar -->
+ </nav>
+ <div id="content">
+ </div>
+</header>
+<main><h1 id="saml2int-policy-configuration-saml2intconfphp">
+ SAML2Int policy configuration (
+ <code>
+  saml2int.conf.php
+ </code>
+ )
+</h1>
+<p>
+ The SAML module supports enforcing selected requirements from the
+ <strong>
+  SAML V2.0 Deployment Profile for Federation Interoperability (SAML2Int) v2.00
+ </strong>
+ .
+</p>
+<p>
+ To keep SAML2Int policy settings separate from the global
+ <code>
+  config.php
+ </code>
+ , SAML2Int enforcement is configured in a dedicated configuration file:
+</p>
+<ul>
+ <li>
+  <strong>
+   Distribution template:
+  </strong>
+  <code>
+   config/saml2int.conf.php.dist
+  </code>
+ </li>
+ <li>
+  <strong>
+   Local configuration:
+  </strong>
+  <code>
+   config/saml2int.conf.php
+  </code>
+ </li>
+</ul>
+<p>
+ Create your local config by copying the dist file:
+ <div class="highlight">
+  <pre><span></span><code>cp<span class="w"> </span>config/saml2int.conf.php.dist<span class="w"> </span>config/saml2int.conf.php
+</code></pre>
+ </div>
+</p>
+<h2 id="options">
+ Options
+</h2>
+<h3 id="responserequire_signed-bool">
+ <code>
+  response.require_signed
+ </code>
+ (bool)
+</h3>
+<p>
+ When set to
+ <code>
+  true
+ </code>
+ , the Service Provider (SP) will reject SAML
+ <code>
+  &lt;Response&gt;
+ </code>
+ messages that are not signed.
+</p>
+<ul>
+ <li>
+  <strong>
+   Default:
+  </strong>
+  <code>
+   false
+  </code>
+ </li>
+ <li>
+  <strong>
+   Enforces:
+  </strong>
+  <strong>
+   [SDP-IDP30]
+  </strong>
+  “Responses MUST be signed” (SAML2Int v2.00)
+ </li>
+</ul>
+<p>
+ This is stricter than “assertion is signed”, because Response-level fields (for example
+ <code>
+  Destination
+ </code>
+ ,
+ <code>
+  InResponseTo
+ </code>
+ , and
+ <code>
+  Status
+ </code>
+ ) are not necessarily protected by an Assertion-only signature.
+</p>
+<p>
+ Example:
+ <div class="highlight">
+  <pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">return</span> <span class="p">[</span>
+    <span class="s1">'response.require_signed'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre>
+ </div>
+</p>
+<h2 id="notes">
+ Notes
+</h2>
+<ul>
+ <li>
+  This configuration file is loaded from the standard SimpleSAMLphp configuration directory (usually
+  <code>
+   config/
+  </code>
+  ).
+ </li>
+ <li>
+  Only the settings in
+  <code>
+   saml2int.conf.php
+  </code>
+  are used for SAML2Int enforcement. Configure SAML2Int-related options here, not in
+  <code>
+   config.php
+  </code>
+  .
+ </li>
+</ul>
+</main></body>
+</html>

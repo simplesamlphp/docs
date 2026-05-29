@@ -286,6 +286,17 @@ See the
  <li>
   Have getServerHTTPS() honor https baseurlpath when $_SERVER['HTTPS'] is absent (#2638)
  </li>
+ <li>
+  SP accepts a response from an unexpected IdP when unsigned
+  <code>
+   Response/InResponseTo
+  </code>
+  is combined with a signed assertion lacking
+  <code>
+   SubjectConfirmationData/InResponseTo
+  </code>
+  (CVE-2026-49284)
+ </li>
 </ul>
 <p>
  <code>
