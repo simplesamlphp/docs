@@ -130,6 +130,9 @@ It complements the inline comments in
  <li>
   Client registration permissions
  </li>
+ <li>
+  Running multiple OPs on one server
+ </li>
 </ul>
 <h2 id="caching-protocol-artifacts">
  Caching protocol artifacts
@@ -484,5 +487,133 @@ needs one of the listed entitlements.
   </a>
  </li>
 </ul>
+<h2 id="running-multiple-ops-on-one-server">
+ Running multiple OPs on one server
+</h2>
+<p>
+ A single module instance is designed to serve exactly one OpenID Provider
+(OP): it has one issuer, one set of signing keys, and one configuration
+file (
+ <code>
+  module_oidc.php
+ </code>
+ ). If you need to run several independent OPs (each
+with its own issuer, keys, clients, and scopes) on the same server, do not
+try to fit them into one config. Instead, run multiple SimpleSAMLphp
+instances side by side and select between them with the
+ <code>
+  SIMPLESAMLPHP_CONFIG_DIR
+ </code>
+ environment variable.
+</p>
+<p>
+ The idea is to give each OP its own configuration directory (each with its
+own
+ <code>
+  config.php
+ </code>
+ ,
+ <code>
+  authsources.php
+ </code>
+ ,
+ <code>
+  module_oidc.php
+ </code>
+ , signing keys, and
+metadata) and to front each one with its own virtual host. SimpleSAMLphp
+reads
+ <code>
+  SIMPLESAMLPHP_CONFIG_DIR
+ </code>
+ to decide which configuration directory to
+load, so each virtual host points at the configuration for its OP:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="c"># Virtual host for the first OP</span>
+<span class="nt">&lt;VirtualHost</span><span class="w"> </span><span class="s">*:443</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nb">ServerName</span><span class="w"> </span>op1.example.org
+<span class="w">    </span><span class="nb">SetEnv</span><span class="w"> </span>SIMPLESAMLPHP_CONFIG_DIR<span class="w"> </span><span class="sx">/etc/simplesamlphp/op1/config</span>
+<span class="w">    </span><span class="c"># ... remaining SimpleSAMLphp / web root configuration ...</span>
+<span class="nt">&lt;/VirtualHost&gt;</span>
+
+<span class="c"># Virtual host for the second OP</span>
+<span class="nt">&lt;VirtualHost</span><span class="w"> </span><span class="s">*:443</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nb">ServerName</span><span class="w"> </span>op2.example.org
+<span class="w">    </span><span class="nb">SetEnv</span><span class="w"> </span>SIMPLESAMLPHP_CONFIG_DIR<span class="w"> </span><span class="sx">/etc/simplesamlphp/op2/config</span>
+<span class="w">    </span><span class="c"># ... remaining SimpleSAMLphp / web root configuration ...</span>
+<span class="nt">&lt;/VirtualHost&gt;</span>
+</code></pre>
+</div>
+<p>
+ With nginx + PHP-FPM, set the same variable per server block via
+ <code>
+  fastcgi_param SIMPLESAMLPHP_CONFIG_DIR /etc/simplesamlphp/op1/config;
+ </code>
+ (or use a separate PHP-FPM pool per OP with
+ <code>
+  env[SIMPLESAMLPHP_CONFIG_DIR]
+ </code>
+ ).
+</p>
+<p>
+ In each OP's
+ <code>
+  module_oidc.php
+ </code>
+ , set a distinct
+ <code>
+  issuer
+ </code>
+ and distinct signing
+key/certificate filenames so the OPs do not share identities or keys.
+</p>
+<h3 id="important-isolate-the-database-or-use-a-table-prefix">
+ Important: isolate the database (or use a table prefix)
+</h3>
+<p>
+ The OIDC module keeps its protocol artifacts — clients, access tokens,
+refresh tokens, authorization codes, allowed origins, and user records — in
+the database, and these tables have no notion of which OP they belong to.
+If two instances point at the same database tables, they will share all of
+that state: a client registered on one OP will be visible to the other, and
+the admin UIs will operate on the same data. That is almost certainly not
+what you want.
+</p>
+<p>
+ To keep the OPs properly isolated, give each instance separate storage by
+configuring its
+ <code>
+  config.php
+ </code>
+ to use
+ <strong>
+  either
+ </strong>
+ a separate database
+ <strong>
+  or
+ </strong>
+ a
+distinct table prefix:
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">// In op1/config/config.php</span>
+<span class="x">'database.dsn' =&gt; 'mysql:host=localhost;dbname=ssp_oidc_op1',</span>
+<span class="x">// ...or share a database but separate the tables with a distinct prefix:</span>
+<span class="x">'database.prefix' =&gt; 'op1_',</span>
+</code></pre>
+</div>
+<div class="highlight">
+ <pre><span></span><code><span class="x">// In op2/config/config.php</span>
+<span class="x">'database.dsn' =&gt; 'mysql:host=localhost;dbname=ssp_oidc_op2',</span>
+<span class="x">// ...or:</span>
+<span class="x">'database.prefix' =&gt; 'op2_',</span>
+</code></pre>
+</div>
+<p>
+ Run the database schema creation (migrations) for each instance separately,
+so each OP gets its own set of tables.
+</p>
 </main></body>
 </html>
