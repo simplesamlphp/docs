@@ -128,6 +128,11 @@
         Reading The Database
        </a>
       </li>
+      <li>
+       <a href="#reading-from-the-primary">
+        Reading From The Primary
+       </a>
+      </li>
      </ul>
     </li>
    </ul>
@@ -181,7 +186,7 @@
  Querying The Database
 </h2>
 <p>
- You can query the database through two public functions read() and write() which are fairly self-explanitory when it comes to determining which one to use when querying.
+ You can query the database through the public functions read(), readPrimary() and write() which are fairly self-explanitory when it comes to determining which one to use when querying.
 </p>
 <h3 id="writing-to-the-database">
  Writing to The Database
@@ -257,5 +262,39 @@
 <span class="x">$query = $db-&gt;read("SELECT * FROM $table WHERE id = :id", $values);</span>
 </code></pre>
 </div>
+<h3 id="reading-from-the-primary">
+ Reading From The Primary
+</h3>
+<p>
+ Secondaries are replicas, and replication takes time. A read served by a secondary can therefore return data that is
+out of date with respect to the primary. When that is not acceptable, use readPrimary() instead of read(): it takes
+the same parameters and returns the same PDOStatement, but always queries the primary and never a secondary.
+</p>
+<div class="highlight">
+ <pre><span></span><code><span class="x">$table = $db-&gt;applyPrefix("test");</span>
+<span class="x">$values = [</span>
+<span class="x">    'id' =&gt; [20, PDO::PARAM_INT],</span>
+<span class="x">];</span>
+
+<span class="x">$query = $db-&gt;readPrimary("SELECT * FROM $table WHERE id = :id", $values);</span>
+</code></pre>
+</div>
+<p>
+ Reach for it when:
+</p>
+<ul>
+ <li>
+  you read back data that was written earlier in the same request, and replication lag would make it look like the
+  write never happened;
+ </li>
+ <li>
+  the result drives a security-relevant decision, such as whether a credential or a token has been revoked. Serving
+  such a decision from a lagging secondary can keep something alive that has already been revoked on the primary.
+ </li>
+</ul>
+<p>
+ Everything else should keep using read(), so that the secondaries keep absorbing the read load they were configured
+for.
+</p>
 </main></body>
 </html>
