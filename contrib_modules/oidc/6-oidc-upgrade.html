@@ -95,6 +95,31 @@
  This is an upgrade guide from versions 1 → 6. Review the changes and
 apply those relevant to your deployment.
 </p>
+<h2 id="version-643-to-644">
+ Version 6.4.3 to 6.4.4
+</h2>
+<p>
+ Claim mappings with type
+ <code>
+  string
+ </code>
+ , including mappings without an explicit
+type, now always emit string values. This fixes non-string
+ <code>
+  sub
+ </code>
+ claims in
+UserInfo responses. Values that cannot be safely converted are rejected, and
+the resulting
+ <code>
+  sub
+ </code>
+ claim must be a non-empty string.
+</p>
+<p>
+ No configuration change is required when mapped attributes already contain
+strings or scalar numeric identifiers.
+</p>
 <h2 id="version-63-to-64">
  Version 6.3 to 6.4
 </h2>
