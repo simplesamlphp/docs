@@ -88,386 +88,772 @@
  <div id="content">
  </div>
 </header>
-<main><h1 id="simplesamlphp-module-casserver-changelog">
- simplesamlphp-module-casserver changelog
+<main><h1 id="changelog">
+ Changelog
 </h1>
-<p>
- Unreleased
-</p>
+<h2 id="705-2026-08-11">
+ [7.0.5] - 2026-08-11
+</h2>
+<h3 id="changed">
+ Changed
+</h3>
 <ul>
  <li>
-  Allow certain authproc filters to be used in configuration
+  Restructure and complete the changelog file (Ioannis Igoumenos)
  </li>
  <li>
-  Support method parameter at login
- </li>
- <li>
-  Improve handling of invalid xml element names for attributes
- </li>
- <li>
-  Minimum supported simplesamlphp version bumped to 1.17
- </li>
- <li>
-  debugMode option to display cas ticket xml
- </li>
- <li>
-  Allow per service overriding of configuration options for www/login
- </li>
- <li>
-  Pass the requesting cas service url to the authproc filters as the sp
-  entity id, which was previously always an empty string
- </li>
- <li>
-  Added an 'idp_entity_id' option, passed to the authproc filters as the
-  idp entity id and defaulting to the simplesamlphp base url
- </li>
- <li>
-  Reject a resumed authproc state whose service url differs from the one
-  the filters ran for
+  Require stable SimpleSAMLphp ~2.5 instead of ~2.5@dev (Ioannis Igoumenos)
  </li>
 </ul>
-<p>
- 2018-07-20 Bjorn Rohde Jensen
-</p>
+<h3 id="fixed">
+ Fixed
+</h3>
 <ul>
  <li>
-  Release 6.1.0
+  Fix CI pipeline workflows, resolve PHP 8.5 test deprecations and upgrade PHPUnit schema (Ioannis Igoumenos)
  </li>
  <li>
-  Minimum supported simplesamlphp version bumped to 1.15.
- </li>
- <li>
-  Fixed some deprecation warnings by using namespaces to refer to the
-  relevant classes.
- </li>
- <li>
-  Added support for using Redis as a ticket store.
+  Fix GitHub Actions schema validation errors and resolve Phive installation rate limits by properly passing GITHUB_TOKEN (Ioannis Igoumenos)
  </li>
 </ul>
-<p>
- 2016-08-01 Bjorn Rohde Jensen
-</p>
+<h2 id="704-2026-08-11">
+ [7.0.4] - 2026-08-11
+</h2>
+<h3 id="changed_1">
+ Changed
+</h3>
 <ul>
  <li>
-  Release 6.0.0
- </li>
- <li>
-  Renamed module from sbcasserver to casserver.
- </li>
- <li>
-  Added composer file to make module installable according to
-  simplesamlphp guidelines.
- </li>
- <li>
-  Replaced use of deprecated SimpleSAMLphp api's.
- </li>
- <li>
-  Fixed a bug when comparing service url parameter to ticket service url,
-  which caused service urls with %20 encoded spaces to fail verification.
+  Pass real Source/Destination metadata into the authproc processing chain (Marko Ivančić)
  </li>
 </ul>
-<p>
- 2014-10-15 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
+<h3 id="fixed_1">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix PHPUnit notices and PHPStan reported issues (Ioannis Igoumenos)
+ </li>
+</ul>
+<h2 id="703-2026-05-15">
+ [7.0.3] - 2026-05-15
+</h2>
+<h3 id="fixed_2">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix unit tests to pass on Windows environments (Tim van Dijen)
+ </li>
+</ul>
+<h2 id="702-2026-05-07">
+ [7.0.2] - 2026-05-07
+</h2>
+<h3 id="changed_2">
+ Changed
+</h3>
+<ul>
+ <li>
+  Minor bug fixes and dependency updates (Ioannis Igoumenos, Tim van Dijen)
+ </li>
+</ul>
+<h3 id="fixed_3">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix Random utility import to use SimpleSAML\Utils\Random (Ioannis Igoumenos)
+ </li>
+</ul>
+<h2 id="701-2026-02-21">
+ [7.0.1] - 2026-02-21
+</h2>
+<h3 id="changed_3">
+ Changed
+</h3>
+<ul>
+ <li>
+  Bump dependencies
+ </li>
+</ul>
+<h2 id="700-2026-01-15">
+ [7.0.0] - 2026-01-15
+</h2>
+<h3 id="added">
+ Added
+</h3>
+<ul>
+ <li>
+  Add routes and controllers for SimpleSAMLphp 2.x compatibility, and migrate templates to Twig (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
+ </li>
+</ul>
+<h3 id="changed_4">
+ Changed
+</h3>
+<ul>
+ <li>
+  Require PHP 8.3 and SimpleSAMLphp 2.5 (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
+ </li>
+ <li>
+  Upgrade xml-libraries to their 2.x versions (using typed values), update version constraints, and require ext-ctype (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
+ </li>
+ <li>
+  Improve gateway parameter handling to match protocol descriptions, allow service tickets on proxyValidate, refactor legal URL comparison, and allow SimpleSAMLphp 2.4.2 assertion usage (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
+ </li>
+ <li>
+  Replace Psalm with PHPstan, replace super-linter with a reusable workflow, and resolve CodeSniffer issues (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
+ </li>
+</ul>
+<h2 id="631-2026-01-15">
+ [6.3.1] - 2026-01-15
+</h2>
+<h3 id="fixed_4">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix open redirect and XSS vulnerabilities in logout template (Tim van Dijen, Patrick Radtke)
+ </li>
+</ul>
+<h2 id="630-2024-11-18">
+ [6.3.0] - 2024-11-18
+</h2>
+<h3 id="added_1">
+ Added
+</h3>
+<ul>
+ <li>
+  Initial support for `samlValidate` for compatibility with Banner (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Add support for alternate service/ticket parameter names and preserving `debugMode` parameter (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Add support for PHP 8.0, 8.1, and 8.3 testing (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+</ul>
+<h3 id="changed_5">
+ Changed
+</h3>
+<ul>
+ <li>
+  Require PHP 8.1 and SimpleSAMLphp 2.2 (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Move `lib/` to `src/` and `www/` to `public/` (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Migrate templates to Twig and translations to dictionaries (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Migrate code to use `xml-cas`, `xml-soap`, and `xml-common` libraries (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Refactor stores for SimpleSAMLphp 2.0 compatibility (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Implement processing chain and delegating ticket store (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Modernize test-suite, migrate PHPUnit config and metadata to attributes, add return types, and fix broken tests on Windows (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Replace abandoned security-checker with composer audit, update SuperLinter, add markdown-linter (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Configure Dependabot and improve GitHub Actions workflows (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+</ul>
+<h3 id="fixed_5">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix SOAP namespace, typo/markdown issues, and handle PDO as an optional dependency (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+ <li>
+  Fix Psalm, CodeSniffer (PSR-12, namespaces, strict typing), and Codecov issues (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
+ </li>
+</ul>
+<h2 id="621-2026-01-15">
+ [6.2.1] - 2026-01-15
+</h2>
+<h3 id="fixed_6">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix open redirect and XSS vulnerabilities in logout template (Tim van Dijen, Patrick Radtke)
+ </li>
+</ul>
+<h2 id="620-2022-02-02">
+ [6.2.0] - 2022-02-02
+</h2>
+<h3 id="changed_6">
+ Changed
+</h3>
+<ul>
+ <li>
+  Require PHP 7.1 and SimpleSAMLphp 1.19
+ </li>
+ <li>
+  Bump dependencies
+ </li>
+</ul>
+<h2 id="612-2022-01-06">
+ [6.1.2] - 2022-01-06
+</h2>
+<h3 id="changed_7">
+ Changed
+</h3>
+<ul>
+ <li>
+  Rename `.codecov.yml` to `codecov.yml` (Tim van Dijen)
+ </li>
+</ul>
+<h3 id="fixed_7">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix `.gitignore` file and configured `allow-plugins` tag for Composer (Tim van Dijen)
+ </li>
+</ul>
+<h2 id="611-2019-11-13">
+ [6.1.1] - 2019-11-13
+</h2>
+<h3 id="added_2">
+ Added
+</h3>
+<ul>
+ <li>
+  Add support for optional method parameter at login, and allow services to override CAS config (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Add `debugMode` to print ticket XML (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+</ul>
+<h3 id="changed_8">
+ Changed
+</h3>
+<ul>
+ <li>
+  Require PHP 5.6 and SimpleSAMLphp 1.17.7 (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Improve CAS 1.0/2.0 protocol handling and illegal attribute name handling (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Improve authproc filtering and fix undefined variables (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Refactor CAS ticket stores (FileSystem, MemCache, Redis, SQL) (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Branch off 1.x, migrate to PHP namespaces, rationalize code, and fix PSR-2 formatting (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Introduce Psalm and Scrutinizer for static analysis and fix reported issues (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+ <li>
+  Improve integration and functional tests to run without requiring a separate PHP server process (Tim van Dijen, Patrick Radtke, Danny)
+ </li>
+</ul>
+<h2 id="610-2018-07-20">
+ [6.1.0] - 2018-07-20
+</h2>
+<h3 id="added_3">
+ Added
+</h3>
+<ul>
+ <li>
+  Add support for using Redis as a ticket store (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h3 id="changed_9">
+ Changed
+</h3>
+<ul>
+ <li>
+  Minimum supported simplesamlphp version bumped to 1.15 (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h3 id="fixed_8">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix some deprecation warnings by using namespaces to refer to the relevant classes (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h2 id="600-2016-08-01">
+ [6.0.0] - 2016-08-01
+</h2>
+<h3 id="added_4">
+ Added
+</h3>
+<ul>
+ <li>
+  Add composer file to make module installable according to simplesamlphp guidelines, requiring SimpleSAMLphp 1.14 (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h3 id="changed_10">
+ Changed
+</h3>
+<ul>
+ <li>
+  Rename module from sbcasserver to casserver (Bjorn Rohde Jensen)
+ </li>
+ <li>
+  Replace use of deprecated SimpleSAMLphp api's (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h3 id="fixed_9">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix a bug when comparing service url parameter to ticket service url, which caused service urls with %20 encoded spaces to fail verification (Bjorn Rohde Jensen)
+ </li>
+</ul>
+<h2 id="523-2014-10-15">
+ [5.2.3] - 2014-10-15
+</h2>
+<h3 id="added_5">
+ Added
+</h3>
+<ul>
+ <li>
+  Add a missing linefeed character in the CAS 1.0 ticket validation failure response (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="522-2014-03-17">
+ [5.2.2] - 2014-03-17
+</h2>
+<h3 id="fixed_10">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix a bug where the sanitized forms of url parameters were used for more than validation (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Fix a bug in the sanitizer logic to remove ';jsessionid' from urls (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="521-2014-02-27">
+ [5.2.1] - 2014-02-27
+</h2>
+<h3 id="fixed_11">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix a bug where attributes containing colons in their names caused serviceValidate to return invalid xml (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="520-2014-02-25">
+ [5.2.0] - 2014-02-25
+</h2>
+<h3 id="added_6">
+ Added
+</h3>
+<ul>
+ <li>
+  Add a logged in landing page in case the client does not provide a service url (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="changed_11">
+ Changed
+</h3>
+<ul>
+ <li>
+  It is now possible to add an attribute indicating whether the attributes are base64 encoded or not (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="removed">
+ Removed
+</h3>
+<ul>
+ <li>
+  Remove hardcoded removal of attributes starting with urn:oid (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="510-2014-02-07">
+ [5.1.0] - 2014-02-07
+</h2>
+<h3 id="added_7">
+ Added
+</h3>
+<ul>
+ <li>
+  Add support for specifying which attributes to transfer (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for specifying a named subset of IdPs allowing clients to restrict the list of IdPs in the wayf step (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="fixed_12">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix a bug where the 'url' parameter was required even when displaying a logged out page (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Fix a bug where attribute transfer could not be disabled (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="500-2013-11-04">
+ [5.0.0] - 2013-11-04
+</h2>
+<h3 id="added_8">
+ Added
+</h3>
+<ul>
+ <li>
+  Add support for storing tickets in a SQL database (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for storing tickets in memcached (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for proxy tickets (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for renewing login (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add an optional logged out landing page with a return url (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for specifying an idp during login thus skipping the wayf step (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add support for specifying a language hint during login (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="removed_1">
+ Removed
+</h3>
+<ul>
+ <li>
+  Remove support for storing tickets in proprietary key-value store AttributeStore (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="400-2013-01-29">
+ [4.0.0] - 2013-01-29
+</h2>
+<h3 id="added_9">
+ Added
+</h3>
+<ul>
+ <li>
+  Add an abstract cas ticket store with concrete subclasses to store tickets locally or in the attribute store (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="changed_12">
+ Changed
+</h3>
+<ul>
+ <li>
+  Move all filters to a dedicated project (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Move theme related code into the sbthemes project (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Change cas 2.0 response generation from hand coded to using php dom document (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h3 id="fixed_13">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Fix a bug in cas 1.0 response generation, where yes/no was returned in upper case (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="330-2012-10-31">
+ [3.3.0] - 2012-10-31
+</h2>
+<h3 id="changed_13">
+ Changed
+</h3>
+<ul>
+ <li>
+  IPRoleMapper can now be configured to add its roles to any given attribute by setting the filter parameter 'targetAttributeName' (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="32-2012-10-24">
+ [3.2] - 2012-10-24
+</h2>
+<h3 id="added_10">
+ Added
+</h3>
+<ul>
+ <li>
+  Add AttributeCollector auth filter for collecting attributes from the attribute store (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+ <li>
+  Add CAS logout (Bjørn Rohde Jensen
+  <a href="mailto/brj@statsbiblioteket.dk.html">
+   brj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="31-2012-05-22">
+ [3.1] - 2012-05-22
+</h2>
+<h3 id="fixed_14">
+ Fixed
+</h3>
+<ul>
+ <li>
+  Correct a spelling bug (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
+ </li>
+</ul>
+<h2 id="3-2012-05-08">
+ <a href="https://www.php.net/manual/en/install.pecl.phpize.php">
+  3
  </a>
-</p>
+ - 2012-05-08
+</h2>
+<h3 id="added_11">
+ Added
+</h3>
 <ul>
  <li>
-  Release 5.2.3
+  Add the Statsbiblioteket theme from sbdisco (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
  <li>
-  Added a missing linefeed character in the CAS 1.0 ticket validation
-  failure response.
+  Add the IP role mapper from sbdisco (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2014-03-17 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h2 id="23-2011-10-31">
+ [2.3] - 2011-10-31
+</h2>
+<h3 id="added_12">
+ Added
+</h3>
 <ul>
  <li>
-  Release 5.2.2
- </li>
- <li>
-  Fixed a bug where the sanitized forms of url parameters were used for
-  more than validation.
- </li>
- <li>
-  Fixed a bug in the sanitizer logic to remove ';jsessionid' from urls.
+  Add a hack to keep compatibility with the eduPersonNIN attribute (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2014-02-27 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h2 id="22-2011-03-29">
+ [2.2] - 2011-03-29
+</h2>
+<h3 id="added_13">
+ Added
+</h3>
 <ul>
  <li>
-  Release 5.2.1
- </li>
- <li>
-  Fixed a bug where attributes containing colons in their names caused
-  serviceValidate to return invalid xml.
+  Add configurable base 64 encoding of attribute values (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2014-02-25 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h3 id="changed_14">
+ Changed
+</h3>
 <ul>
  <li>
-  Release 5.2.0
+  Reintroduce ignore urn:oid attributes (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
  <li>
-  Removed hardcoded removal of attributes starting with urn:oid.
- </li>
- <li>
-  Added a logged in landing page in case the client does not provide
-  a service url.
- </li>
- <li>
-  It is now possible to add an attribute indicating whether the attributes
-  are base64 encoded or not.
+  Change the casserver to use the configured auth source (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2014-02-07 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h3 id="removed_2">
+ Removed
+</h3>
 <ul>
  <li>
-  Release 5.1.0
- </li>
- <li>
-  Fixed a bug where the 'url' parameter was required even when displaying
-  a logged out page.
- </li>
- <li>
-  Fixed a bug where attribute transfer could not be disabled.
- </li>
- <li>
-  Added support for specifying which attributes to transfer.
- </li>
- <li>
-  Added support for specifying a named subset of IdPs allowing clients to
-  restrict the list of IdPs in the wayf step.
+  Remove debug messages (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2013-11-04 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h2 id="none-2011-01-18">
+ [None] - 2011-01-18
+</h2>
+<h3 id="changed_15">
+ Changed
+</h3>
 <ul>
  <li>
-  Release 5.0.0
- </li>
- <li>
-  Removed support for storing tickets in proprietary key-value
-  store AttributeStore.
- </li>
- <li>
-  Added support for storing tickets in a SQL database.
- </li>
- <li>
-  Added support for storing tickets in memcached.
- </li>
- <li>
-  Added support for proxy tickets.
- </li>
- <li>
-  Added support for renewing login.
- </li>
- <li>
-  Added an optional logged out landing page with a return url.
- </li>
- <li>
-  Added support for specifying an idp during login thus skipping the
-  wayf step.
- </li>
- <li>
-  Added support for specifying a language hint during login.
+  Change default from disabled to enabled (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
-<p>
- 2013-01-29 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
+<h2 id="21-2011-01-17">
+ [2.1] - 2011-01-17
+</h2>
+<h3 id="changed_16">
+ Changed
+</h3>
 <ul>
  <li>
-  Release 4.0.0
+  All files are rewritten based on work by Dubravko Voncina (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
  <li>
-  Moved all filters to a dedicated project.
- </li>
- <li>
-  Moved theme related code into the sbthemes project.
- </li>
- <li>
-  Added an abstract cas ticket store with concrete subclasses to store
-  tickets locally or in the attribute store.
- </li>
- <li>
-  Changed cas 2.0 response generation from hand coded to using
-  php dom document.
- </li>
- <li>
-  Fixed a bug in cas 1.0 response generation, where yes/no was
-  returned in upper case.
- </li>
-</ul>
-<p>
- 2012-10-31 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  release 3.3.0
- </li>
- <li>
-  IPRoleMapper can now be configured to add its roles to any given attribute
-  by setting the filter parameter 'targetAttributeName'.
- </li>
-</ul>
-<p>
- 2012-10-24 Bjørn Rohde Jensen
- <a href="mailto/brj@statsbiblioteket.dk.html">
-  brj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  release 3.2
- </li>
- <li>
-  Added AttributeCollector auth filter for collecting attributes from
-  the attribute store.
- </li>
- <li>
-  Added CAS logout
- </li>
-</ul>
-<p>
- 2012-05-22  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  release 3.1
- </li>
- <li>
-  Corrected a spelling bug
- </li>
-</ul>
-<p>
- 2012-05-08  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  Release 3
- </li>
- <li>
-  Added the Statsbiblioteket theme from sbdisco
- </li>
- <li>
-  Added the IP role mapper from sbdisco
- </li>
-</ul>
-<p>
- 2011-10-31  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  Release 2.3
- </li>
- <li>
-  Added a hack to keep compatibility with the eduPersonNIN attribute.
- </li>
-</ul>
-<p>
- 2011-03-29  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  Release 2.2
- </li>
- <li>
-  Reintroduced ignore urn:oid attributes.
- </li>
- <li>
-  Added configurable base 64 encoding of attribute values.
- </li>
- <li>
-  Removed debug messages.
- </li>
- <li>
-  Changed the casserver to use the configured auth source.
- </li>
-</ul>
-<p>
- 2011-01-18  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  Changed default from disabled to enabled
- </li>
-</ul>
-<p>
- 2011-01-17  Per Møldrup-Dalum
- <a href="mailto/pdj@statsbiblioteket.dk.html">
-  pdj@statsbiblioteket.dk
- </a>
-</p>
-<ul>
- <li>
-  Creating release 2.0
- </li>
- <li>
-  All files are rewritten based on work by Dubravko Voncina. See Google
-  Groups discussion in this thread:
-  <code>
+  See Google Groups discussion in this thread:
+  <a href="http://groups.google.com/group/simplesamlphp/browse_thread/thread/4c655d169532650a">
    http://groups.google.com/group/simplesamlphp/browse_thread/thread/4c655d169532650a
-  </code>
+  </a>
+  (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
  <li>
-  Creating release 2.1
-  The sbcasserver module now uses its own "namespace" instead of
-  hi-jacking the casserver "namespace". Therefore the
-  <code>
-   config-templates/module_casserver.php
-  </code>
-  has been renamed to
-  module_sbcasserver.php
- </li>
- <li>
-  The files in www has all been changed to use the new "namespace".
+  The files in www has all been changed to use the new "namespace" (Per Møldrup-Dalum
+  <a href="mailto/pdj@statsbiblioteket.dk.html">
+   pdj@statsbiblioteket.dk
+  </a>
+  )
  </li>
 </ul>
 </main></body>
