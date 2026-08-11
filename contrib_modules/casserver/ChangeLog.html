@@ -113,6 +113,18 @@
  <li>
   Allow per service overriding of configuration options for www/login
  </li>
+ <li>
+  Pass the requesting cas service url to the authproc filters as the sp
+  entity id, which was previously always an empty string
+ </li>
+ <li>
+  Added an 'idp_entity_id' option, passed to the authproc filters as the
+  idp entity id and defaulting to the simplesamlphp base url
+ </li>
+ <li>
+  Reject a resumed authproc state whose service url differs from the one
+  the filters ran for
+ </li>
 </ul>
 <p>
  2018-07-20 Bjorn Rohde Jensen
