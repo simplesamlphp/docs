@@ -322,7 +322,7 @@ Configure Apache to preserve the header using one of these snippets:
             <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'private scope'</span><span class="p">,</span>
             <span class="s1">'claim_name_prefix'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span>
             <span class="s1">'are_multiple_claim_values_allowed'</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">'attributes'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'national_document_id'</span><span class="p">],</span>
+            <span class="s1">'claims'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'national_document_id'</span><span class="p">],</span>
         <span class="p">],</span>
     <span class="p">],</span>
 <span class="p">];</span>
@@ -368,6 +368,15 @@ Configure Apache to preserve the header using one of these snippets:
 <span class="p">];</span>
 </code></pre>
 </div>
+<p>
+ To expose newly created or custom claims in the UserInfo endpoint or ID token,
+they must also be assigned to a custom scope in
+ <code>
+  OPTION_AUTH_CUSTOM_SCOPES
+ </code>
+ ,
+enabled for the client, and requested by the client.
+</p>
 <h2 id="auth-proc-filters-oidc">
  Auth Proc filters (OIDC)
 </h2>
