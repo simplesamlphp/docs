@@ -418,6 +418,11 @@ Available SAML-like keys include:
  </li>
 </ul>
 <p>
+ The same two keys are also set in the state given to the authentication
+source when the module starts a login, so the authentication source can use
+them before authentication completes (for example, to log failed logins).
+</p>
+<p>
  Additional OIDC data in the state:
 </p>
 <ul>
