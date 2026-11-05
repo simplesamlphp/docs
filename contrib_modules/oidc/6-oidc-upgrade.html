@@ -95,6 +95,93 @@
  This is an upgrade guide from versions 1 → 6. Review the changes and
 apply those relevant to your deployment.
 </p>
+<h2 id="version-64-to-65">
+ Version 6.4 to 6.5
+</h2>
+<p>
+ New option, disabled by default:
+</p>
+<ul>
+ <li>
+  <code>
+   ModuleConfig::OPTION_DISALLOW_IMPLICIT_FOR_CONFIDENTIAL_CLIENTS
+  </code>
+  : if enabled,
+a confidential client requesting the implicit flow is refused with the
+  <code>
+   unauthorized_client
+  </code>
+  error, so it can only get tokens through the authorization
+code flow. Public clients are not affected.
+ </li>
+</ul>
+<p>
+ Changes a client can see at the token endpoint, when it exchanges an
+authorization code as a confidential client:
+</p>
+<ul>
+ <li>
+  A client which presents no client authentication, or a client assertion which
+is refused for having no JWKS to check it with, a signature which does not
+verify, or the wrong Issuer or Audience, now gets
+  <code>
+   invalid_client
+  </code>
+  (RFC 6749 section 5.2, RFC 7521 section 4.2.1). It got
+  <code>
+   access_denied
+  </code>
+  . A client
+which compares the
+  <code>
+   error
+  </code>
+  member with the old value needs the new one.
+ </li>
+ <li>
+  A client assertion which can not be parsed, which includes one that has expired,
+lacks a required claim or has a Subject other than its Issuer, gets
+  <code>
+   invalid_client
+  </code>
+  too. It ended on the SimpleSAMLphp error page, with HTTP 500.
+ </li>
+ <li>
+  All of these answers are HTTP 401, with a
+  <code>
+   WWW-Authenticate
+  </code>
+  challenge when the
+request used the
+  <code>
+   Authorization
+  </code>
+  header. Their
+  <code>
+   error_description
+  </code>
+  does not say
+why the client was refused, which that of
+  <code>
+   access_denied
+  </code>
+  did: the reason is in
+the OP log, at
+  <code>
+   warning
+  </code>
+  level, with the
+  <code>
+   client_id
+  </code>
+  . A wrong client secret, which
+already got
+  <code>
+   invalid_client
+  </code>
+  , is logged the same way.
+ </li>
+</ul>
 <h2 id="version-643-to-644">
  Version 6.4.3 to 6.4.4
 </h2>
