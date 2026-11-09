@@ -99,6 +99,16 @@
    </a>
    <ul>
     <li>
+     <a href="#version-2412">
+      Version 2.4.12
+     </a>
+    </li>
+    <li>
+     <a href="#version-2411">
+      Version 2.4.11
+     </a>
+    </li>
+    <li>
      <a href="#version-2410">
       Version 2.4.10
      </a>
@@ -285,12 +295,44 @@ See the
  </a>
  for specific information about upgrading.
 </p>
-<h2 id="version-2410">
- Version 2.4.10
+<h2 id="version-2412">
+ Version 2.4.12
 </h2>
 <p>
  Released TBD
 </p>
+<h2 id="version-2411">
+ Version 2.4.11
+</h2>
+<ul>
+ <li>
+  Fix file config for MetaDataStorageHandlerXML (#2682)
+ </li>
+</ul>
+<p>
+ Released 2026-11-09
+</p>
+<p>
+ <code>
+  saml2
+ </code>
+</p>
+<ul>
+ <li>
+  Fix a possible DoS in the HTTPRedirect-binding by limiting the input-size of payloads passed to gzinflate()
+ </li>
+</ul>
+<h2 id="version-2410">
+ Version 2.4.10
+</h2>
+<p>
+ Released 2026-08-30
+</p>
+<ul>
+ <li>
+  Fix missing namespace-declaration
+ </li>
+</ul>
 <h2 id="version-249">
  Version 2.4.9
 </h2>
