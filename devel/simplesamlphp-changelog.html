@@ -99,6 +99,11 @@
    </a>
    <ul>
     <li>
+     <a href="#version-255">
+      Version 2.5.5
+     </a>
+    </li>
+    <li>
      <a href="#version-254">
       Version 2.5.4
      </a>
@@ -275,15 +280,49 @@ See the
  </a>
  for specific information about upgrading.
 </p>
-<h2 id="version-254">
- Version 2.5.4
+<h2 id="version-255">
+ Version 2.5.5
 </h2>
 <p>
  Released TBD
 </p>
+<h2 id="version-254">
+ Version 2.5.4
+</h2>
+<p>
+ Released 2026-11-09
+</p>
 <ul>
  <li>
-  Fix admin federation page calling a removed SAMLBuilder method
+  Fix typo in MetadataTest docblock (#2669)
+ </li>
+ <li>
+  Fix admin federation page calling a removed SAMLBuilder method (#2672)
+ </li>
+ <li>
+  Include _head.twig from post as well as base (#2676)
+ </li>
+ <li>
+  Several doc improvements (#2679, #2680)
+ </li>
+ <li>
+  Fix SPProvidedID array key casing typo when configuring Subject NameID in SP (#2686)
+ </li>
+ <li>
+  Add container-method to limit gzinflate
+ </li>
+ <li>
+  Several chores, deprecation fixes and dependency bumps
+ </li>
+</ul>
+<p>
+ <code>
+  saml2
+ </code>
+</p>
+<ul>
+ <li>
+  Fix a possible DoS in the HTTPRedirect-binding by limiting the input-size of payloads passed to gzinflate()
  </li>
 </ul>
 <h2 id="version-253">
