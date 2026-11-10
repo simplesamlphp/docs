@@ -91,10 +91,91 @@
 <main><h1 id="changelog">
  Changelog
 </h1>
+<h2 id="706-2026-11-10">
+ [7.0.6] - 2026-11-10
+</h2>
+<h3 id="security">
+ Security
+</h3>
+<ul>
+ <li>
+  Validate the service (login), return url (logout) and target service (proxy) exactly as received.
+  A service must start with scheme://host[:port], its scheme and authority must not change when sanitized,
+  and the authority must not contain userinfo, percent-encoding, backslashes, whitespace or control
+  characters (GHSA-9g9q-j468-7fp4) (Marko Ivančić)
+ </li>
+</ul>
+<h3 id="changed">
+ Changed
+</h3>
+<ul>
+ <li>
+  Recommend prefixes that end after the host, and anchored regular expressions, in the example configuration (Marko Ivančić)
+ </li>
+ <li>
+  Allow beste/clock ~3.0 || ~4.0 (#84)
+ </li>
+ <li>
+  Allow simplesamlphp/simplesamlphp-test-framework ~2.0 (#85)
+ </li>
+</ul>
+<h3 id="upgrade-notes">
+ Upgrade notes
+</h3>
+<ul>
+ <li>
+  Services, logout urls and proxy target services whose host part contains
+  <code>
+   user@
+  </code>
+  ,
+  <code>
+   %
+  </code>
+  -encoding,
+  backslashes, whitespace or control characters, or that do not start with
+  <code>
+   scheme://
+  </code>
+  , are now refused.
+ </li>
+ <li>
+  Check
+  <code>
+   legal_service_urls
+  </code>
+  and
+  <code>
+   legal_target_service_urls
+  </code>
+  : each prefix should end with
+  <code>
+   /
+  </code>
+  after the host
+  (e.g.
+  <code>
+   https://app.example.com/
+  </code>
+  ) and each regular expression should be anchored with
+  <code>
+   ^
+  </code>
+  (e.g.
+  <code>
+   |^https://app\.example\.com/|
+  </code>
+  ). See
+  <code>
+   config/module_casserver.php.dist
+  </code>
+  .
+ </li>
+</ul>
 <h2 id="705-2026-08-11">
  [7.0.5] - 2026-08-11
 </h2>
-<h3 id="changed">
+<h3 id="changed_1">
  Changed
 </h3>
 <ul>
@@ -119,7 +200,7 @@
 <h2 id="704-2026-08-11">
  [7.0.4] - 2026-08-11
 </h2>
-<h3 id="changed_1">
+<h3 id="changed_2">
  Changed
 </h3>
 <ul>
@@ -149,7 +230,7 @@
 <h2 id="702-2026-05-07">
  [7.0.2] - 2026-05-07
 </h2>
-<h3 id="changed_2">
+<h3 id="changed_3">
  Changed
 </h3>
 <ul>
@@ -168,7 +249,7 @@
 <h2 id="701-2026-02-21">
  [7.0.1] - 2026-02-21
 </h2>
-<h3 id="changed_3">
+<h3 id="changed_4">
  Changed
 </h3>
 <ul>
@@ -187,7 +268,7 @@
   Add routes and controllers for SimpleSAMLphp 2.x compatibility, and migrate templates to Twig (Ioannis Igoumenos, Tim van Dijen, Patrick Radtke, David Lundgren)
  </li>
 </ul>
-<h3 id="changed_4">
+<h3 id="changed_5">
  Changed
 </h3>
 <ul>
@@ -232,7 +313,7 @@
   Add support for PHP 8.0, 8.1, and 8.3 testing (Tim van Dijen, Patrick Radtke, Ioannis Igoumenos)
  </li>
 </ul>
-<h3 id="changed_5">
+<h3 id="changed_6">
  Changed
 </h3>
 <ul>
@@ -289,7 +370,7 @@
 <h2 id="620-2022-02-02">
  [6.2.0] - 2022-02-02
 </h2>
-<h3 id="changed_6">
+<h3 id="changed_7">
  Changed
 </h3>
 <ul>
@@ -303,7 +384,7 @@
 <h2 id="612-2022-01-06">
  [6.1.2] - 2022-01-06
 </h2>
-<h3 id="changed_7">
+<h3 id="changed_8">
  Changed
 </h3>
 <ul>
@@ -333,7 +414,7 @@
   Add `debugMode` to print ticket XML (Tim van Dijen, Patrick Radtke, Danny)
  </li>
 </ul>
-<h3 id="changed_8">
+<h3 id="changed_9">
  Changed
 </h3>
 <ul>
@@ -370,7 +451,7 @@
   Add support for using Redis as a ticket store (Bjorn Rohde Jensen)
  </li>
 </ul>
-<h3 id="changed_9">
+<h3 id="changed_10">
  Changed
 </h3>
 <ul>
@@ -397,7 +478,7 @@
   Add composer file to make module installable according to simplesamlphp guidelines, requiring SimpleSAMLphp 1.14 (Bjorn Rohde Jensen)
  </li>
 </ul>
-<h3 id="changed_10">
+<h3 id="changed_11">
  Changed
 </h3>
 <ul>
@@ -483,7 +564,7 @@
   )
  </li>
 </ul>
-<h3 id="changed_11">
+<h3 id="changed_12">
  Changed
 </h3>
 <ul>
@@ -632,7 +713,7 @@
   )
  </li>
 </ul>
-<h3 id="changed_12">
+<h3 id="changed_13">
  Changed
 </h3>
 <ul>
@@ -673,7 +754,7 @@
 <h2 id="330-2012-10-31">
  [3.3.0] - 2012-10-31
 </h2>
-<h3 id="changed_13">
+<h3 id="changed_14">
  Changed
 </h3>
 <ul>
@@ -777,7 +858,7 @@
   )
  </li>
 </ul>
-<h3 id="changed_14">
+<h3 id="changed_15">
  Changed
 </h3>
 <ul>
@@ -811,7 +892,7 @@
 <h2 id="none-2011-01-18">
  [None] - 2011-01-18
 </h2>
-<h3 id="changed_15">
+<h3 id="changed_16">
  Changed
 </h3>
 <ul>
@@ -826,7 +907,7 @@
 <h2 id="21-2011-01-17">
  [2.1] - 2011-01-17
 </h2>
-<h3 id="changed_16">
+<h3 id="changed_17">
  Changed
 </h3>
 <ul>
