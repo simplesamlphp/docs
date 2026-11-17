@@ -94,6 +94,24 @@
 <h2 id="unreleased">
  [Unreleased]
 </h2>
+<h3 id="changed">
+ Changed
+</h3>
+<ul>
+ <li>
+  Give the authentication source Source and Destination before login, so that it can report a failed login against them (Marko Ivančić)
+ </li>
+ <li>
+  The test suite now reports deprecations, including those triggered with
+  <code>
+   @
+  </code>
+  such as Symfony's
+  <code>
+   trigger_deprecation()
+  </code>
+ </li>
+</ul>
 <h3 id="fixed">
  Fixed
 </h3>
@@ -121,21 +139,6 @@
    str_contains()
   </code>
   check for the error template had its arguments reversed)
- </li>
-</ul>
-<h3 id="changed">
- Changed
-</h3>
-<ul>
- <li>
-  The test suite now reports deprecations, including those triggered with
-  <code>
-   @
-  </code>
-  such as Symfony's
-  <code>
-   trigger_deprecation()
-  </code>
  </li>
 </ul>
 <h2 id="706-2026-11-10">
